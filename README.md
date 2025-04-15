@@ -94,6 +94,10 @@ adb -s <ip_emulador|nombre_emulador> install app.apk
 
 ---
 
+## 📋 Otras notas
+### 📦 Visualizar markdown desde android studio
+- Ir a > `choose boot Java Runtime` y elegir el recomendado, instalar y reiniciar
+
 ## 🔗 Enlaces útiles
 
 - [🔧 Integración de lint-staged y Husky en Flutter](https://thisiscem.medium.com/boosting-code-quality-in-your-flutter-projects-lint-staged-and-husky-integration-4bcee79bbb85)
