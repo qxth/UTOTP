@@ -26,6 +26,9 @@ flutter pub get
 
 ## 🧪 Pre-commits con Husky
 
+<details>
+<summary>Expandir</summary>
+
 ### ✅ Instalación de Husky
 
 ```bash
@@ -64,11 +67,15 @@ dart run husky add .husky/commit-msg 'dart run commitlint_cli --edit $1'
 git commit -a -m "mensaje"
 ```
 
----
+</details>
 
+---
 ## 📱 Comandos útiles de ADB
 
 Asegúrate de tener `adb` instalado desde el Android SDK. Luego, puedes ejecutar los siguientes comandos desde PowerShell:
+
+<details>
+<summary>Expandir</summary>
 
 ### 🔍 Navega a la carpeta `platform-tools`
 
@@ -109,6 +116,7 @@ adb -s <ip_emulador|nombre_emulador> install app.apk
 > Útil para dispositivos conectados remotamente.
 
 ---
+</details>
 
 ## 📋 Otras notas
 ### 📦 Visualizar markdown desde android studio
