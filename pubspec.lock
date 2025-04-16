@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  change_case:
+    dependency: transitive
+    description:
+      name: change_case
+      sha256: f4e08feaa845e75e4f5ad2b0e15f24813d7ea6c27e7b78252f0c17f752cf1157
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   characters:
     dependency: transitive
     description:
@@ -65,6 +73,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  commitlint_cli:
+    dependency: "direct dev"
+    description:
+      name: commitlint_cli
+      sha256: "7882210129f2616d4899ad85073a75ef293deac693dd6f7dc4f0492b0758322b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.1"
+  commitlint_config:
+    dependency: "direct dev"
+    description:
+      name: commitlint_config
+      sha256: "252e99b927fce4971b94b8e5e2e6f6e919a7b6b20156f45af1dced2c9387a521"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   cupertino_icons:
     dependency: "direct main"
     description:
