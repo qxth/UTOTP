@@ -1,0 +1,37 @@
+# Inherit configuration of a package
+include: package:commitlint_cli/commitlint.yaml
+
+# Custom rules
+rules:
+  type-enum:
+    - 2
+    - always
+    - - build
+      - chore
+      - ci
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - revert
+      - style
+      - test
+  scope-enum:
+    - 2
+    - always
+    - - cli
+      - config
+      - format
+      - lint
+      - load
+      - read
+      - release
+      - rules
+      - types
+
+# Whether commitlint uses the default ignore rules.
+defaultIgnores: true
+# Pattern that matches commit message if commitlint should ignore the given message.
+ignores:
+  - r'^fixup'

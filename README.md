@@ -30,7 +30,13 @@ flutter pub get
 
 ```bash
 dart pub add --dev husky
+```
+
+```bash
 dart run husky install
+```
+
+```bash
 dart run husky add .husky/pre-commit "flutter test"
 ```
 
@@ -41,6 +47,16 @@ dart pub add --dev lint_staged
 ```
 
 > 💡 Revisa el archivo de configuración para asegurar que se ejecute el lint en los archivos modificados.
+
+### 🧹 Integrar Commitlint  con Husky
+```bash
+dart pub add --dev commitlint_cli
+```
+
+```bash
+dart run husky add .husky/commit-msg 'dart run commitlint_cli --edit $1'
+```
+
 
 ### 💬 Realizar commits con Husky activado
 
@@ -99,7 +115,4 @@ adb -s <ip_emulador|nombre_emulador> install app.apk
 - Ir a > `choose boot Java Runtime` y elegir el recomendado, instalar y reiniciar
 
 ## 🔗 Enlaces útiles
-
 - [🔧 Integración de lint-staged y Husky en Flutter](https://thisiscem.medium.com/boosting-code-quality-in-your-flutter-projects-lint-staged-and-husky-integration-4bcee79bbb85)
-
----
