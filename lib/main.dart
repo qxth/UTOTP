@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:totp_unix/views/temporizador_view.dart';
+import 'package:totp_unix/views/inicio_view.dart';
 
 void main() {
   runApp(const UTOTPApp());
@@ -16,7 +16,7 @@ class UTOTPApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      home: TemporizadorView(),
+      home: InicioView(),
     );
   }
 }

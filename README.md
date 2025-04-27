@@ -113,6 +113,17 @@ adb -s <ip_emulador|nombre_emulador> shell
 adb -s <ip_emulador|nombre_emulador> install app.apk
 ```
 
+### 📦 Subir archivos desde host a emulador
+
+```powershell
+adb -s <ip_emulador|nombre_emulador> push "$env:homepath\Downloads\fichero.txt" /storage/emulated/0/Download
+```
+
+### 📦 Bajar archivos desde emulador a host
+```powershell
+adb -s <ip_emulador|nombre_emulador> pull /storage/emulated/0/Download/fichero.txt "$env:homepath\Downloads\" 
+```
+
 > Útil para dispositivos conectados remotamente.
 
 ---
