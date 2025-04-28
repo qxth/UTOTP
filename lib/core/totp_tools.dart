@@ -1,3 +1,3 @@
-class Totp {
+class TotpTools {
   // ... nada por hacer
 }
