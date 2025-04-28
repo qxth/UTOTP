@@ -11,10 +11,7 @@ class Tarjeta extends StatelessWidget {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 6,
-        color:
-        Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey[800]
-            : Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Center(
@@ -24,10 +21,7 @@ class Tarjeta extends StatelessWidget {
                 fontSize: 24,
                 fontFamily: 'Courier',
                 fontWeight: FontWeight.bold,
-                color:
-                Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
               textAlign: TextAlign.center,
             ),

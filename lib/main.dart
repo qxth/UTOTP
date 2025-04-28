@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:totp_unix/views/inicio_view.dart';
+import 'package:get/get.dart';
+import 'core/navigation_service.dart';
+import 'core/rutas.dart';
 
 void main() {
   runApp(const UTOTPApp());
@@ -10,13 +12,12 @@ class UTOTPApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Unix',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: InicioView(),
+      title: 'UTOTP',
+      navigatorKey: NagicationService.key,
+      initialRoute: Rutas.inicio,
+      getPages: WGRutas.routers,
     );
   }
 }

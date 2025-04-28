@@ -1,3 +1,3 @@
-class Totp {
+class Globals {
   // ... nada por hacer
 }
