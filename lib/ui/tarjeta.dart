@@ -18,7 +18,7 @@ class Tarjeta extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 23,
                 fontFamily: 'Courier',
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,

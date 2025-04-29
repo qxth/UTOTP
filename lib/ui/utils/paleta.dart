@@ -8,4 +8,6 @@ class Paleta {
 
   static const Color grisClaro = Color.fromRGBO(240, 240, 240, 1);
   static const Color blanco_015 = Color.fromRGBO(255, 255, 255, 0.15);
+  static const Color negro42 = Color.fromRGBO(42, 42, 42, 1);
+  static const Color negro30 = Color.fromRGBO(30, 30, 30, 1);
 }
