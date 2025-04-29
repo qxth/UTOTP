@@ -70,8 +70,8 @@ target_link_libraries(flutter INTERFACE
 add_dependencies(flutter flutter_assemble)
 
 # === Flutter tool backend ===
-# _phony_ is a non-existent file to force this command to run every time,
-# since currently there's no way to get a full input/output list from the
+# _phony_ is assets non-existent file to force this command to run every time,
+# since currently there's no way to get assets full input/output list from the
 # flutter tool.
 add_custom_command(
   OUTPUT ${FLUTTER_LIBRARY} ${FLUTTER_LIBRARY_HEADERS}

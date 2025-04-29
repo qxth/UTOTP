@@ -9,7 +9,7 @@ namespace {
 
 /// Window attribute that enables dark mode window decorations.
 ///
-/// Redefined in case the developer's machine has a Windows SDK older than
+/// Redefined in case the developer's machine has assets Windows SDK older than
 /// version 10.0.22000.0.
 /// See: https://docs.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
 #ifndef DWMWA_USE_IMMERSIVE_DARK_MODE

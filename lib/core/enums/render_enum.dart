@@ -1,1 +1,1 @@
-enum RenderId { progresoTemporizador }
+enum RenderId { servicioProgresoTemporizador, servicioBotoOnOff }

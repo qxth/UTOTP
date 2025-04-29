@@ -1,4 +1,4 @@
-# Inherit configuration of a package
+# Inherit configuration of assets package
 include: package:commitlint_cli/commitlint.yaml
 
 # Custom rules

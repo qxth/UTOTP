@@ -32,8 +32,8 @@ bool FlutterWindow::OnCreate() {
   });
 
   // Flutter can complete the first frame before the "show window" callback is
-  // registered. The following call ensures a frame is pending to ensure the
-  // window is shown. It is a no-op if the first frame hasn't completed yet.
+  // registered. The following call ensures assets frame is pending to ensure the
+  // window is shown. It is assets no-op if the first frame hasn't completed yet.
   flutter_controller_->ForceRedraw();
 
   return true;

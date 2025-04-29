@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import '../controllers/servicio_controller.dart';
 import '../core/enums/render_enum.dart';
 import 'utils/paleta.dart';
 import 'package:get/get.dart';
-import '../controllers/inicio_controller.dart';
 
 class Temporizador extends StatefulWidget {
   const Temporizador({super.key});
@@ -13,13 +13,14 @@ class Temporizador extends StatefulWidget {
 }
 
 class _TemporizadorState extends State<Temporizador> {
-  final InicioController inicioController = Get.find();
+  final ServicioController servicioController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<InicioController>(
-      id: RenderId.progresoTemporizador,
+    return GetBuilder<ServicioController>(
+      id: RenderId.servicioProgresoTemporizador,
       builder: (_) {
+        debugPrint('> Render: $this');
         return SfRadialGauge(
           axes: <RadialAxis>[
             RadialAxis(
@@ -41,32 +42,32 @@ class _TemporizadorState extends State<Temporizador> {
                 ),
 
                 RangePointer(
-                  value: inicioController.progreso,
+                  value: servicioController.progreso,
                   width: 0.06,
-                  color: Colors.white,
+                  color: Colors.blueGrey,
                   pointerOffset: 0.08,
                   cornerStyle: CornerStyle.bothCurve,
                   sizeUnit: GaugeSizeUnit.factor,
                   // gradient: const SweepGradient(
-                  //   colors: <Color>[Color(0xFF00a9b5), Color(0xFFa4edeb)],
-                  //   stops: <double>[0.25, 0.75],
+                  //   colors: <Color>[Colors.orange, Colors.purple, Colors.cyan, Colors.teal, Colors.pink],
+                  //   stops: <double>[0.25, 0.35, 0.45, 0.65, 0.90],
                   // ),
                 ),
                 MarkerPointer(
-                  value: inicioController.progreso,
+                  value: servicioController.progreso,
                   markerType: MarkerType.circle,
-                  color: const Color(0xffffffff),
+                  color: Colors.white,
                   markerWidth: 25,
                   markerHeight: 25,
                   offsetUnit: GaugeSizeUnit.factor,
                   markerOffset: -0.39,
                 ),
                 MarkerPointer(
-                  text: inicioController.txtTiempo,
+                  text: servicioController.txtTiempo,
                   markerOffset: 82,
                   textStyle: GaugeTextStyle(color: Paleta.verdePetroleo, fontSize: 40, fontWeight: FontWeight.w500),
                   markerType: MarkerType.text,
-                  color: const Color(0xffffffff),
+                  color: Colors.white,
                 ),
               ],
             ),

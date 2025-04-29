@@ -1,35 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
-class CuentaTarjeta extends StatelessWidget {
+import '../core/rutas.dart';
+import 'utils/paleta.dart';
+
+class CuentaTarjeta extends StatefulWidget {
   const CuentaTarjeta({super.key});
 
   @override
+  State<CuentaTarjeta> createState() => _CuentaTarjetaState();
+}
+
+class _CuentaTarjetaState extends State<CuentaTarjeta> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 8,
-        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[900] : Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => Get.toNamed(Rutas.servicio),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          decoration: BoxDecoration(
+            color: _isHovered ? (isDark ? Paleta.negro42 : Colors.grey[50]) : (isDark ? Paleta.negro30 : Colors.white),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: _isHovered ? 20 : 12, offset: const Offset(0, 6)),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              // Logo GitHub
               CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage('https://cdn-icons-png.flaticon.com/512/25/25231.png'),
+                child: SvgPicture.asset(
+                  'assets/svg/github.svg',
+                  height: 60,
+                  colorFilter: ColorFilter.mode(isDark ? Colors.white : Colors.black, BlendMode.srcIn),
+                ),
               ),
-              const SizedBox(width: 20),
-              // Información
+              const SizedBox(width: 14),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('GITHUB', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
-                  SizedBox(height: 5),
-                  Text('Cuenta:', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                  Text('correo@hotmail.com', style: TextStyle(fontSize: 14, color: Colors.black87)),
+                children: [
+                  Text(
+                    'GITHUB',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : Colors.black87,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'correo@hotmail.com',
+                    style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[100] : Colors.black87, fontWeight: FontWeight.w500),
+                  ),
                 ],
               ),
             ],
