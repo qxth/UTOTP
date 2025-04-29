@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/inicio_controller.dart';
-import '../ui/tarjeta.dart';
-import '../ui/temporizador.dart';
+import '../ui/cuenta_tarjeta.dart';
 import '../ui/utils/paleta.dart';
 
 class InicioView extends GetView<InicioController> {
@@ -13,33 +12,19 @@ class InicioView extends GetView<InicioController> {
     debugPrint('> Render Inicio');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TOTP'),
+        title: Row(spacing: 15, children: [Icon(Icons.account_balance), const Text('Totp')]),
         backgroundColor: Paleta.azulNoche,
         foregroundColor: Paleta.grisClaro,
         automaticallyImplyLeading: false,
-        leading: IconButton(icon: const Icon(Icons.ac_unit), onPressed: () {}),
-        actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.add_box_rounded), onPressed: () {})],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Tarjeta(text: 'user@hotmail.com'),
-              const SizedBox(height: 16),
-              Temporizador(),
-              const SizedBox(height: 16),
-              Tarjeta(text: '123456'),
-              const SizedBox(height: 32),
-              ElevatedButton(onPressed: controller.iniciarTemporizador, child: const Text('Activar')),
-              const SizedBox(height: 16),
-              ElevatedButton(onPressed: controller.cancelarTemporizador, child: const Text('Cancelar')),
-            ],
+            children: [CuentaTarjeta()],
           ),
         ),
       ),

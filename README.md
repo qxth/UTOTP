@@ -6,7 +6,7 @@ TOTP (Time-based One-Time Password) para Flutter.
 
 ## 📋 Versión de Flutter
 
-Flutter 3.29.2 - Tools • Dart 3.7.2 • DevTools 2.42.3
+Flutter 3.29.3 - Tools • Dart 3.7.2 • DevTools 2.42.3
 
 ## 🚀 Antes de comenzar
 

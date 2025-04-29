@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'core/navigation_service.dart';
+import 'core/navigator.dart';
 import 'core/rutas.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class UTOTPApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'UTOTP',
-      navigatorKey: NagicationService.key,
+      navigatorKey: GlobalNavigator.key,
       initialRoute: Rutas.inicio,
       getPages: WGRutas.routers,
     );
