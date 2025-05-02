@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  lottie: ^2.7.0
   cupertino_icons: ^1.0.8
   get: ^4.7.2
   syncfusion_flutter_gauges: ^29.1.39
@@ -62,6 +63,7 @@ flutter:
   assets:
     - assets/img/
     - assets/svg/
+    - assets/lottie/loading.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
