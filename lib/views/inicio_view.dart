@@ -10,6 +10,7 @@ class InicioView extends GetView<InicioController> {
   @override
   Widget build(BuildContext context) {
     debugPrint('> Render Inicio');
+
     return Scaffold(
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.account_balance), const Text('Totp')]),
@@ -24,7 +25,8 @@ class InicioView extends GetView<InicioController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [CuentaTarjeta()],
+            spacing: 10,
+            children: [for (var k = 0; k < 10; k++) CuentaTarjeta()],
           ),
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/servicio_controller.dart';
 import '../core/enums/render_enum.dart';
+import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
 import '../ui/utils/paleta.dart';
@@ -24,13 +25,12 @@ class ServicioView extends GetView<ServicioController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 15,
             children: [
               Tarjeta(text: controller.correo),
-              const SizedBox(height: 16),
               Temporizador(),
-              const SizedBox(height: 16),
               Tarjeta(text: controller.codigo2fa),
-              const SizedBox(height: 32),
+              LineaTiempo(callback: (value) => controller.setMilisegundosTemporizador(sec: value.toInt())),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
                 child: Container(

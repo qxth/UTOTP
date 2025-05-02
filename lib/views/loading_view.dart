@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'inicio_view.dart'; // Asegúrate de importar correctamente
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const GetMaterialApp(debugShowCheckedModeBanner: false, home: LoadingView());
+  }
+}
+
+class LoadingView extends StatefulWidget {
+  const LoadingView({super.key});
+
+  @override
+  State<LoadingView> createState() => _LoadingViewState();
+}
+
+class _LoadingViewState extends State<LoadingView> with TickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this);
+
+    // Timer de 5 segundos para cambiar de vista
+    Future.delayed(const Duration(seconds: 5), () {
+      Get.off(() => const InicioView());
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xFFEEE6FD), Color(0xFFD6C6F8)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                'assets/lottie/loading.json',
+                width: 200,
+                height: 200,
+                controller: _controller,
+                onLoaded: (composition) {
+                  _controller
+                    ..duration = composition.duration
+                    ..repeat();
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Cargando...',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF5E50C9), letterSpacing: 1.2),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

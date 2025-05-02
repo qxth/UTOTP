@@ -20,7 +20,7 @@ class _TemporizadorState extends State<Temporizador> {
     return GetBuilder<ServicioController>(
       id: RenderId.servicioProgresoTemporizador,
       builder: (_) {
-        debugPrint('> Render: $this');
+        // debugPrint('> Render: $this');
         return SfRadialGauge(
           axes: <RadialAxis>[
             RadialAxis(
@@ -44,7 +44,7 @@ class _TemporizadorState extends State<Temporizador> {
                 RangePointer(
                   value: servicioController.progreso,
                   width: 0.06,
-                  color: Colors.blueGrey,
+                  color: Colors.purple,
                   pointerOffset: 0.08,
                   cornerStyle: CornerStyle.bothCurve,
                   sizeUnit: GaugeSizeUnit.factor,
