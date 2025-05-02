@@ -10,7 +10,8 @@ class ServicioController extends GetxController {
   String correo = "user@example.com";
   String codigo2fa = "xxxxxx";
 
-  int segundosLimite = 60;
+  int segundosLimite = 0;
+  int minutosLimite = 0;
   int milisegundosLimite = Duration.millisecondsPerSecond;
   double progreso = 100;
   bool temporizadorIniciado = false;
@@ -18,11 +19,13 @@ class ServicioController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    setMilisegundosTemporizador();
+    setMilisegundosTemporizador(sec: 15);
   }
 
-  void setMilisegundosTemporizador() {
-    milisegundosLimite = Duration.millisecondsPerSecond * segundosLimite;
+  void setMilisegundosTemporizador({required int sec}) {
+    minutosLimite = sec ~/ Duration.secondsPerMinute;
+    segundosLimite = sec;
+    milisegundosLimite = Duration.millisecondsPerSecond * sec;
   }
 
   void iniciarTemporizador() {
@@ -36,16 +39,25 @@ class ServicioController extends GetxController {
     timer = Timer.periodic(Duration(milliseconds: 60), (_) {
       DateTime now = DateTime.now();
       // # Forma 1
-      // var totalMs = now.millisecond + (now.second * Duration.millisecondsPerSecond);
-      // progreso = ((totalMs * 100.0) / limiteTemporizador) % 100;
+      /*
+      var totalMs =
+          now.millisecond +
+              (now.second * Duration.millisecondsPerSecond) +
+              (now.minute * Duration.secondsPerMinute * Duration.millisecondsPerSecond);
+      progreso = ((totalMs * 100.0) / milisegundosLimite) % 100;
+       */
 
-      // # Forma 2
-      final totalMs = now.millisecondsSinceEpoch % milisegundosLimite;
-      progreso = (totalMs * 100.0) / milisegundosLimite;
+      // # Forma 2 : no funciona > probado en test
+      // final totalMs = now.millisecondsSinceEpoch % milisegundosLimite;
+      // progreso = (totalMs * 100.0) / milisegundosLimite;
 
-      final finalSegundos = segundosLimite - (now.second % segundosLimite);
-      txtTiempo = '$finalSegundos'.padLeft(2, '0');
-      // debugPrint('${now.millisecond} | ${now.second} > ${progreso}');
+      // # Forma 3
+      final totalMs = now.millisecondsSinceEpoch - DateTime(now.year, now.month, now.day, now.hour).millisecondsSinceEpoch;
+      progreso = ((totalMs * 100.0) / milisegundosLimite) % 100;
+
+      mostrarTiempo(now);
+
+      // debugPrint('${now.toIso8601String()} ${progreso.toStringAsFixed(2)}');
       // debugPrint('${now.millisecondsSinceEpoch} | ${now.millisecondsSinceEpoch % milisegundosLimite}');
       update([RenderId.servicioProgresoTemporizador]);
     });
@@ -54,5 +66,14 @@ class ServicioController extends GetxController {
   void cancelarTemporizador() {
     timer?.cancel();
     update([RenderId.servicioProgresoTemporizador]);
+  }
+
+  void mostrarTiempo(DateTime now) {
+    final totalSegundos = segundosLimite > 0 ? segundosLimite - (now.second % segundosLimite) : 0;
+    final totalMinutos = minutosLimite > 0 ? minutosLimite - (now.minute % minutosLimite) - 1 : 0;
+
+    final min = totalMinutos.toString().padLeft(2, '0');
+    final sec = (totalSegundos % 60).toString().padLeft(2, '0');
+    txtTiempo = '$min:$sec';
   }
 }
