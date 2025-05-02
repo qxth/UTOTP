@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'inicio_view.dart'; // Asegúrate de importar correctamente
+import '../core/rutas.dart';
 import '../ui/utils/paleta.dart';
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const GetMaterialApp(debugShowCheckedModeBanner: false, home: LoadingView());
-  }
-}
 
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
@@ -28,12 +17,11 @@ class _LoadingViewState extends State<LoadingView> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(vsync: this);
 
     // Timer de 5 segundos para cambiar de vista
     Future.delayed(const Duration(seconds: 5), () {
-      Get.off(() => const InicioView());
+      Get.offNamed(Rutas.inicio);
     });
   }
 

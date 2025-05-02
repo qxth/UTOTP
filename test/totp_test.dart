@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:totp_unix/core/enums/totp_enum.dart';
 
-void main() async {
+void main() {
   group("Enums", () {
     test("TOTPAlgorithm", () {
       for (var item in TOTPAlgorithm.values) {

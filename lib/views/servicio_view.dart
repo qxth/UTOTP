@@ -30,7 +30,7 @@ class ServicioView extends GetView<ServicioController> {
               Tarjeta(text: controller.correo),
               Temporizador(),
               Tarjeta(text: controller.codigo2fa),
-              LineaTiempo(callback: (value) => controller.setMilisegundosTemporizador(sec: value.toInt())),
+              LineaTiempo(callback: (value) => controller.setMilisegundosTemporizador(sec: value), lista: controller.lineaTiempo),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
                 child: Container(

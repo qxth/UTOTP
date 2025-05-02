@@ -3,6 +3,9 @@ import 'dart:ui';
 class Paleta {
   static const Color turquesa = Color.fromRGBO(120, 210, 190, 1);
   static const Color purpuraOscuro = Color.fromRGBO(31, 3, 53, 1);
+  static const Color purpuraMedio = Color.fromRGBO(142, 68, 191, 1.0);
+  static const Color moradoIntenso = Color.fromRGBO(100, 25, 158, 1.0);
+
   static const Color verdePetroleo = Color.fromRGBO(47, 57, 57, 1);
   static const Color azulNoche = Color.fromRGBO(31, 36, 53, 1.0);
 
