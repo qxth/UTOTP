@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'inicio_view.dart'; // Asegúrate de importar correctamente
+import '../ui/utils/paleta.dart';
 
 void main() => runApp(const MyApp());
 
@@ -47,7 +48,7 @@ class _LoadingViewState extends State<LoadingView> with TickerProviderStateMixin
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [Color(0xFFEEE6FD), Color(0xFFD6C6F8)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          gradient: LinearGradient(colors: [Paleta.lavandaClaro, Paleta.lavanda], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         ),
         child: Center(
           child: Column(
@@ -67,7 +68,7 @@ class _LoadingViewState extends State<LoadingView> with TickerProviderStateMixin
               const SizedBox(height: 20),
               const Text(
                 'Cargando...',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFF5E50C9), letterSpacing: 1.2),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Paleta.purpuraClaro, letterSpacing: 1.2),
               ),
             ],
           ),
