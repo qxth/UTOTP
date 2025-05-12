@@ -1,0 +1,1 @@
+enum EnumAlphaStorage { idxTiempo }

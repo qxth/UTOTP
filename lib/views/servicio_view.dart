@@ -15,8 +15,8 @@ class ServicioView extends GetView<ServicioController> {
     return Scaffold(
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.stacked_bar_chart), const Text('Servicio')]),
-        backgroundColor: Paleta.azulNoche,
-        foregroundColor: Paleta.grisClaro,
+        backgroundColor: Paleta.azul_noche,
+        foregroundColor: Paleta.gris_claro,
         actions: [IconButton(icon: const Icon(Icons.settings), onPressed: () {})],
       ),
       body: SingleChildScrollView(
@@ -30,7 +30,7 @@ class ServicioView extends GetView<ServicioController> {
               Tarjeta(text: controller.correo),
               Temporizador(),
               Tarjeta(text: controller.codigo2fa),
-              LineaTiempo(callback: (value) => controller.setMilisegundosTemporizador(sec: value), lista: controller.lineaTiempo),
+              LineaTiempo(callback: controller.setMilisegundosTemporizadorStore, lista: controller.lineaTiempo),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
                 child: Container(

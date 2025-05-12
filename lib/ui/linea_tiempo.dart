@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../core/alpha_storage.dart';
+import '../core/enums/storage_enum.dart';
+
 class LineaTiempo extends StatefulWidget {
-  final Function(int value) callback;
+  final Function({required int sec, required int idx}) callback;
   final List<int> lista;
   const LineaTiempo({super.key, required this.callback, required this.lista});
 
@@ -36,8 +39,8 @@ class _LineaTiempoState extends State<LineaTiempo> {
             label: controller.label(),
             onChanged: (double value) {
               controller.indiceTiempo.value = value.round();
-              controller.segundosActual.value = controller.listaTiempos[controller.indiceTiempo.value];
-              widget.callback(controller.segundosActual.value);
+              final segundosActuales = controller.listaTiempos[controller.indiceTiempo.value];
+              widget.callback(sec: segundosActuales, idx: controller.indiceTiempo.value);
             },
             activeColor: Colors.deepPurple,
             inactiveColor: Colors.deepPurple.shade100,
@@ -51,22 +54,26 @@ class _LineaTiempoState extends State<LineaTiempo> {
 class LineaTiempoController extends GetxController {
   final List<int> listaTiempos;
   RxInt indiceTiempo = RxInt(0);
-  late RxInt segundosActual;
 
   LineaTiempoController(this.listaTiempos);
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    segundosActual = RxInt(listaTiempos[0]);
+
+    final int? idxTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
+    // debugPrint('Indice Store X: $idxTiempo');
+    setTiempo(idxTiempo: idxTiempo);
   }
 
   String label() {
-    if (segundosActual.value < 60) {
-      return '${listaTiempos[indiceTiempo.value].toInt()}s';
+    final segundosActual = listaTiempos[indiceTiempo.value];
+
+    if (segundosActual < 60) {
+      return '${segundosActual.toInt()}s';
     }
-    final int m = segundosActual.value ~/ 60;
-    final int s = segundosActual.value % 60;
+    final int m = segundosActual ~/ 60;
+    final int s = segundosActual % 60;
     if (s == 0) {
       return '${m}m';
     }
@@ -74,8 +81,14 @@ class LineaTiempoController extends GetxController {
   }
 
   String labelTiempo() {
-    final int m = segundosActual.value ~/ 60;
-    final int s = segundosActual.value % 60;
+    final int m = listaTiempos[indiceTiempo.value] ~/ 60;
+    final int s = listaTiempos[indiceTiempo.value] % 60;
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  void setTiempo({required int? idxTiempo}) {
+    if (idxTiempo != null) {
+      indiceTiempo.value = idxTiempo;
+    }
   }
 }

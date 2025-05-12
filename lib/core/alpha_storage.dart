@@ -37,6 +37,16 @@ class AlphaStorage {
     return await _storage.read(key: key);
   }
 
+  static Future<int?> readInt(key) async {
+    final String? value = await read(key);
+    try {
+      if (value != null) {
+        return int.parse(value);
+      }
+    } catch (_) {}
+    return null;
+  }
+
   static Future<String?> readJson(key) async {
     try {
       String? data = await AlphaStorage.read(key);

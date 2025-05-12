@@ -14,8 +14,8 @@ class InicioView extends GetView<InicioController> {
     return Scaffold(
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.account_balance), const Text('Totp')]),
-        backgroundColor: Paleta.azulNoche,
-        foregroundColor: Paleta.grisClaro,
+        backgroundColor: Paleta.azul_noche,
+        foregroundColor: Paleta.gris_claro,
         automaticallyImplyLeading: false,
         actions: [IconButton(icon: const Icon(Icons.add_box_rounded), onPressed: () {})],
       ),

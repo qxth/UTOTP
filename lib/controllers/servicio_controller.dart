@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
+import '../core/alpha_storage.dart';
 import '../core/enums/render_enum.dart';
+import '../core/enums/storage_enum.dart';
 
 class ServicioController extends GetxController {
   final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600];
@@ -12,22 +14,32 @@ class ServicioController extends GetxController {
   String correo = "user@example.com";
   String codigo2fa = "xxxxxx";
 
-  // int segundosLimite = 0;
-  // int minutosLimite = 0;
   int milisegundosLimite = Duration.millisecondsPerSecond;
   double progreso = 0;
   bool temporizadorIniciado = false;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    setMilisegundosTemporizador(sec: lineaTiempo[0]);
+
+    final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
+    // debugPrint('Indice Store: $indiceTiempo');
+    setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    iniciarTemporizador();
   }
 
   void setMilisegundosTemporizador({required int sec}) {
-    // minutosLimite = sec ~/ Duration.secondsPerMinute;
-    // segundosLimite = sec;
     milisegundosLimite = Duration.millisecondsPerSecond * sec;
+  }
+
+  void setMilisegundosTemporizadorStore({required int sec, required int idx}) async {
+    await AlphaStorage.save(key: EnumAlphaStorage.idxTiempo.name, value: idx);
+    setMilisegundosTemporizador(sec: sec);
   }
 
   void iniciarTemporizador() {
