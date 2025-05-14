@@ -18,7 +18,7 @@ class _TemporizadorState extends State<Temporizador> {
     return GetBuilder<ServicioController>(
       id: RenderId.servicioProgresoTemporizador,
       builder: (servicioController) {
-        debugPrint('> Render: $this');
+        // debugPrint('> Render: $this');
         return SfRadialGauge(
           axes: <RadialAxis>[
             RadialAxis(

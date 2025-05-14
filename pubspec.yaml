@@ -36,6 +36,7 @@ dependencies:
   syncfusion_flutter_gauges: ^29.1.39
   flutter_svg: ^2.1.0
   flutter_secure_storage: ^9.2.4
+  crypto: ^3.0.6
 
 
 dev_dependencies:

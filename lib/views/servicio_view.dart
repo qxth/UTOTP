@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/servicio_controller.dart';
-import '../core/enums/render_enum.dart';
 import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
@@ -12,6 +11,7 @@ class ServicioView extends GetView<ServicioController> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('> Render Servicio: $this');
     return Scaffold(
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.stacked_bar_chart), const Text('Servicio')]),
@@ -27,9 +27,9 @@ class ServicioView extends GetView<ServicioController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 15,
             children: [
-              Tarjeta(text: controller.correo),
+              Obx(() => Tarjeta(text: controller.correo.value)),
               Temporizador(),
-              Tarjeta(text: controller.codigo2fa),
+              Obx(() => Tarjeta(text: controller.codigo2fa.value)),
               LineaTiempo(callback: controller.setMilisegundosTemporizadorStore, lista: controller.lineaTiempo),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
@@ -37,13 +37,7 @@ class ServicioView extends GetView<ServicioController> {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   alignment: Alignment.center,
-                  child: GetBuilder<ServicioController>(
-                    id: RenderId.servicioBotoOnOff,
-                    builder: (_) {
-                      debugPrint('> Render Text: $this');
-                      return Text(controller.temporizadorIniciado ? 'CANCELAR' : 'ACTIVAR');
-                    },
-                  ),
+                  child: Obx(() => Text(controller.temporizadorIniciado.value ? 'CANCELAR' : 'ACTIVAR')),
                 ),
               ),
             ],

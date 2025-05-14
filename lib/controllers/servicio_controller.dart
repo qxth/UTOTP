@@ -1,22 +1,25 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../core/alpha_storage.dart';
 import '../core/enums/render_enum.dart';
 import '../core/enums/storage_enum.dart';
+import '../core/totp.dart';
 
 class ServicioController extends GetxController {
   final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600];
 
   Timer? timer;
   String txtTiempo = "00:00";
-  String correo = "user@example.com";
-  String codigo2fa = "xxxxxx";
+  RxString correo = "user@example.com".obs;
+  RxString codigo2fa = "xxxxxx".obs;
 
   int milisegundosLimite = Duration.millisecondsPerSecond;
+  int segundosLimite = 0;
   double progreso = 0;
-  bool temporizadorIniciado = false;
+  RxBool temporizadorIniciado = false.obs;
 
   @override
   void onInit() async {
@@ -34,6 +37,7 @@ class ServicioController extends GetxController {
   }
 
   void setMilisegundosTemporizador({required int sec}) {
+    segundosLimite = sec;
     milisegundosLimite = Duration.millisecondsPerSecond * sec;
   }
 
@@ -43,14 +47,16 @@ class ServicioController extends GetxController {
   }
 
   void iniciarTemporizador() {
-    temporizadorIniciado = !temporizadorIniciado;
-    update([RenderId.servicioBotoOnOff]);
-    if (!temporizadorIniciado) {
+    temporizadorIniciado.value = !temporizadorIniciado.value;
+    if (!temporizadorIniciado.value) {
       cancelarTemporizador();
       return;
     }
 
-    timer = Timer.periodic(Duration(milliseconds: 60), (_) {
+    int expiracionInicial = -1;
+    final String secretKey = 'ABCDEFGHIJ';
+
+    timer = Timer.periodic(Duration(milliseconds: 60), (_) async {
       DateTime now = DateTime.now();
 
       final int expiracion = ((now.millisecondsSinceEpoch + 1) / milisegundosLimite).ceil() * milisegundosLimite;
@@ -59,7 +65,16 @@ class ServicioController extends GetxController {
 
       progreso = 100 - (intervalo * 100 / milisegundosLimite);
 
+      if (expiracionInicial != expiracion) {
+        expiracionInicial = expiracion;
+        final totp = await Totp.generate(secretKey, period: segundosLimite);
+        codigo2fa.value = totp.otp;
+        // debugPrint('> Obteniendo OTP: $expiracion');
+        debugPrint('Code: ${codigo2fa.value} | Sec: $segundosLimite');
+      }
+
       mostrarTiempo(intervalo);
+      // debugPrint('$expiracion $intervalo');
       // debugPrint('${mostrarHora(now)} | ${mostrarHora(expiracionTime)} | ${now.millisecondsSinceEpoch} | ${expiracionTime.millisecondsSinceEpoch}');
       update([RenderId.servicioProgresoTemporizador]);
     });
