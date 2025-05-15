@@ -15,7 +15,6 @@ void main() {
     final hasta = 60;
     final msMinuto = 1_000 * 60;
 
-    /*
     group('Forma 1', () {
       for (var k = desde; k < hasta; k++) {
         final msTotal = msMinuto * k;
@@ -24,7 +23,6 @@ void main() {
         });
       }
     });
-     */
 
     /*
     group('Forma 2', () {
@@ -37,7 +35,6 @@ void main() {
     });
      // */
 
-    /*
     group('Forma 3', () {
       for (var k = desde; k < hasta; k++) {
         final msTotal = msMinuto * k;
@@ -46,7 +43,6 @@ void main() {
         });
       }
     });
-     */
 
     /*
     test('test minutos', () {

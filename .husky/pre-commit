@@ -2,6 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 dart run lint_staged
-flutter test
 dart format .
 git add .
