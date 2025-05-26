@@ -30,10 +30,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  lottie: ^2.7.0
   cupertino_icons: ^1.0.8
   get: ^4.7.2
   syncfusion_flutter_gauges: ^29.1.39
   flutter_svg: ^2.1.0
+  flutter_secure_storage: ^9.2.4
+  intl: ^0.18.1
+  crypto: ^3.0.6
 
 
 dev_dependencies:
@@ -61,6 +65,7 @@ flutter:
   assets:
     - assets/img/
     - assets/svg/
+    - assets/lottie/loading.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -89,4 +94,4 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
 lint_staged:
-  'lib/**.dart': dart format && dart analyze --fatal-infos --fatal-warnings
+  'lib/**.dart': dart analyze --fatal-infos --fatal-warnings

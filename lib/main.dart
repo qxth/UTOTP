@@ -16,7 +16,7 @@ class UTOTPApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'UTOTP',
       navigatorKey: GlobalNavigator.key,
-      initialRoute: Rutas.inicio,
+      initialRoute: Rutas.animacion,
       getPages: WGRutas.routers,
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/servicio_controller.dart';
-import '../core/enums/render_enum.dart';
+import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
 import '../ui/utils/paleta.dart';
@@ -11,11 +11,12 @@ class ServicioView extends GetView<ServicioController> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('> Render Servicio: $this');
     return Scaffold(
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.stacked_bar_chart), const Text('Servicio')]),
-        backgroundColor: Paleta.azulNoche,
-        foregroundColor: Paleta.grisClaro,
+        backgroundColor: Paleta.azul_noche,
+        foregroundColor: Paleta.gris_claro,
         actions: [IconButton(icon: const Icon(Icons.settings), onPressed: () {})],
       ),
       body: SingleChildScrollView(
@@ -24,26 +25,19 @@ class ServicioView extends GetView<ServicioController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 15,
             children: [
-              Tarjeta(text: controller.correo),
-              const SizedBox(height: 16),
+              Obx(() => Tarjeta(text: controller.correo.value)),
               Temporizador(),
-              const SizedBox(height: 16),
-              Tarjeta(text: controller.codigo2fa),
-              const SizedBox(height: 32),
+              Obx(() => Tarjeta(text: controller.codigo2fa.value)),
+              LineaTiempo(callback: controller.setMilisegundosTemporizadorStore, lista: controller.lineaTiempo),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   alignment: Alignment.center,
-                  child: GetBuilder<ServicioController>(
-                    id: RenderId.servicioBotoOnOff,
-                    builder: (_) {
-                      debugPrint('> Render Text: $this');
-                      return Text(controller.temporizadorIniciado ? 'CANCELAR' : 'ACTIVAR');
-                    },
-                  ),
+                  child: Obx(() => Text(controller.temporizadorIniciado.value ? 'CANCELAR' : 'ACTIVAR')),
                 ),
               ),
             ],

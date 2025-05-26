@@ -13,14 +13,12 @@ class Temporizador extends StatefulWidget {
 }
 
 class _TemporizadorState extends State<Temporizador> {
-  final ServicioController servicioController = Get.find();
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ServicioController>(
       id: RenderId.servicioProgresoTemporizador,
-      builder: (_) {
-        debugPrint('> Render: $this');
+      builder: (servicioController) {
+        // debugPrint('> Render: $this');
         return SfRadialGauge(
           axes: <RadialAxis>[
             RadialAxis(
@@ -30,7 +28,7 @@ class _TemporizadorState extends State<Temporizador> {
               maximum: 100,
               startAngle: 270,
               endAngle: 270,
-              axisLineStyle: AxisLineStyle(thickness: 1, color: Paleta.turquesa, thicknessUnit: GaugeSizeUnit.factor),
+              axisLineStyle: AxisLineStyle(thickness: 1, color: Paleta.purpura_oscuro, thicknessUnit: GaugeSizeUnit.factor),
               pointers: <GaugePointer>[
                 RangePointer(
                   value: 100,
@@ -40,11 +38,10 @@ class _TemporizadorState extends State<Temporizador> {
                   cornerStyle: CornerStyle.bothCurve,
                   sizeUnit: GaugeSizeUnit.factor,
                 ),
-
                 RangePointer(
                   value: servicioController.progreso,
                   width: 0.06,
-                  color: Colors.blueGrey,
+                  color: Paleta.purpura_medio,
                   pointerOffset: 0.08,
                   cornerStyle: CornerStyle.bothCurve,
                   sizeUnit: GaugeSizeUnit.factor,
@@ -65,7 +62,7 @@ class _TemporizadorState extends State<Temporizador> {
                 MarkerPointer(
                   text: servicioController.txtTiempo,
                   markerOffset: 82,
-                  textStyle: GaugeTextStyle(color: Paleta.verdePetroleo, fontSize: 40, fontWeight: FontWeight.w500),
+                  textStyle: GaugeTextStyle(color: Paleta.gris_claro, fontSize: 40, fontWeight: FontWeight.w500),
                   markerType: MarkerType.text,
                   color: Colors.white,
                 ),
