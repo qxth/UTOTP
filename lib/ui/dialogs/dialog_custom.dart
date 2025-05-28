@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../utils/paleta.dart';
 
 class DialogCustom extends StatefulWidget {
@@ -44,7 +45,7 @@ class DialogCustomState extends State<DialogCustom> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(alignment: Alignment.topRight, child: CloseButton(onPressed: () => Navigator.of(context).pop())),
+                Align(alignment: Alignment.topRight, child: CloseButton(onPressed: () => Get.back())),
                 Center(child: Text(widget.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600))),
                 const SizedBox(height: 16),
 
@@ -96,7 +97,7 @@ class DialogCustomState extends State<DialogCustom> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         widget.onSave(_category!, _task);
-                        Navigator.of(context).pop();
+                        Get.back();
                       }
                     },
                     style: ButtonStyle(

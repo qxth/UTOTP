@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DialogOption {
   final String text;
@@ -26,7 +27,7 @@ class DialogSimpleState extends State<DialogSimple> {
           widget.options.map((option) {
             return SimpleDialogOption(
               onPressed: () {
-                Navigator.of(context).pop();
+                Get.back();
                 option.onPressed();
               },
               child: Text(option.text),

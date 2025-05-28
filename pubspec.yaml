@@ -48,7 +48,7 @@ dev_dependencies:
   lint_staged: ^0.5.1
   commitlint_cli: ^0.8.1
   commitlint_config: ^0.1.2
-
+  flutter_launcher_icons: ^0.14.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
