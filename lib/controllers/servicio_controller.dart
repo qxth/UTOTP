@@ -22,17 +22,11 @@ class ServicioController extends GetxController {
   RxBool temporizadorIniciado = false.obs;
 
   @override
-  void onInit() async {
-    super.onInit();
+  void onReady() async {
+    super.onReady();
 
     final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
-    // debugPrint('Indice Store: $indiceTiempo');
     setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
     iniciarTemporizador();
   }
 
