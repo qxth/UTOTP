@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../ui/dialogs/dialog_custom.dart';
+import '../models/servicio_modal.dart';
 import '../controllers/inicio_controller.dart';
 import '../ui/cuenta_tarjeta.dart';
 import '../ui/utils/paleta.dart';
+import '../ui/widgets/wg.dart';
 
 class InicioView extends GetView<InicioController> {
   const InicioView({super.key});
@@ -22,17 +23,7 @@ class InicioView extends GetView<InicioController> {
           IconButton(
             icon: const Icon(Icons.add_box),
             onPressed: () {
-              showDialog(
-                context: context,
-                builder:
-                    (context) => DialogCustom(
-                      title: 'Nuevo Servicio',
-                      categories: ['Personal', 'Trabajo', 'Otro'],
-                      buttonColor: Paleta.turquesa,
-                      buttonTextColor: Paleta.gris_claro,
-                      onSave: (category, task) {},
-                    ),
-              );
+              WG.mostrarModalServicio(servicioExistente: null);
             },
           ),
         ],
@@ -44,7 +35,26 @@ class InicioView extends GetView<InicioController> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 10,
-            children: [for (var k = 0; k < 10; k++) CuentaTarjeta()],
+            children: [
+              CuentaTarjeta(
+                servicio: ServicioModal(
+                  idServicio: '1',
+                  claveTotp: '123456',
+                  tipo: EnumTipoServicio.otro,
+                  correo: 'correo@gmail.com',
+                  titulo: 'Titulo',
+                ),
+              ),
+              CuentaTarjeta(
+                servicio: ServicioModal(
+                  idServicio: '1',
+                  claveTotp: '123456',
+                  tipo: EnumTipoServicio.github,
+                  correo: 'correo@gmail.com',
+                  titulo: 'Titulo',
+                ),
+              ),
+            ],
           ),
         ),
       ),

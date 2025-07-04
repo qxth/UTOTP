@@ -105,14 +105,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.8.1"
-  commitlint_config:
-    dependency: "direct dev"
-    description:
-      name: commitlint_config
-      sha256: "252e99b927fce4971b94b8e5e2e6f6e919a7b6b20156f45af1dced2c9387a521"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   crypto:
     dependency: "direct main"
     description:

@@ -31,11 +31,11 @@ class DialogAlertState extends State<DialogAlert> {
   IconData get icon {
     switch (widget.type) {
       case DialogType.success:
-        return Icons.check;
+        return Icons.check_rounded;
       case DialogType.warning:
-        return Icons.warning;
+        return Icons.warning_rounded;
       case DialogType.error:
-        return Icons.close;
+        return Icons.close_rounded;
     }
   }
 
@@ -117,7 +117,7 @@ class DialogAlertState extends State<DialogAlert> {
                   ),
                 ],
               ),
-              child: CircleAvatar(backgroundColor: Colors.white, radius: 30, child: Icon(icon, color: backgroundColor, size: 30)),
+              child: CircleAvatar(backgroundColor: Colors.white, radius: 30, child: Icon(icon, color: backgroundColor, size: 35)),
             ),
           ),
         ],

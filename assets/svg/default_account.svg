@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Asa del portafolio -->
+  <rect x="9" y="5" width="6" height="2" rx="1" fill="#4E2E0E"/>
+  <!-- Cuerpo del portafolio -->
+  <rect x="4" y="7" width="16" height="13" rx="2" fill="#4E2E0E"/>
+  <!-- Línea divisoria del portafolio -->
+  <rect x="4" y="13" width="16" height="1.5" fill="#B97A56"/>
+  <!-- Cierres del portafolio -->
+  <rect x="8" y="15" width="2" height="2" rx="0.5" fill="#B97A56"/>
+  <rect x="14" y="15" width="2" height="2" rx="0.5" fill="#B97A56"/>
+</svg> 

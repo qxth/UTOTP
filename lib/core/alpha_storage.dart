@@ -15,10 +15,8 @@ class AlphaStorage {
         await _storage.write(key: key, value: data);
         return true;
       }
-      return false;
-    } catch (ex) {
-      return Future.error(ex);
-    }
+    } catch (_) {}
+    return false;
   }
 
   static Future<bool> save({key, value}) async {
@@ -27,10 +25,8 @@ class AlphaStorage {
         await _storage.write(key: key, value: value.toString());
         return true;
       }
-      return false;
-    } catch (ex) {
-      return Future.error(ex);
-    }
+    } catch (_) {}
+    return false;
   }
 
   static Future<String?> read(key) async {
@@ -47,16 +43,14 @@ class AlphaStorage {
     return null;
   }
 
-  static Future<String?> readJson(key) async {
+  static Future<dynamic> readJson(key) async {
     try {
       String? data = await AlphaStorage.read(key);
       if (data != null) {
         return json.decode(data);
       }
-      return null;
-    } catch (ex) {
-      return Future.error(ex);
-    }
+    } catch (_) {}
+    return null;
   }
 
   static Future<void> delete(key) async {

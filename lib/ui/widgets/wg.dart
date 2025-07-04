@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/navigator.dart';
+import '../../models/servicio_modal.dart';
+import '../dialog_servicio.dart';
 import '../dialogs/dialog_alert.dart';
 
 class WG {
@@ -18,10 +20,27 @@ class WG {
     );
   }
 
-  static void error({bool nt = false, String? title = 'Advertencia', message = 'Se ha generado un error inesperado.'}) {
+  static void error({bool nt = false, String? title = 'Error', message = 'Se ha generado un error inesperado.'}) {
     showDialog(
       context: GlobalNavigator.key.currentContext!,
       builder: (BuildContext context) => DialogAlert(title: nt ? null : title, message: message, type: DialogType.error),
     );
+  }
+
+  static Future<ServicioModal?> mostrarModalServicio({ServicioModal? servicioExistente}) async {
+    return await showDialog<ServicioModal>(
+      context: GlobalNavigator.key.currentContext!,
+      builder: (_) => ModalServicio(servicioExistente: servicioExistente),
+      barrierDismissible: false,
+    );
+  }
+
+  static String getIconoTipo(EnumTipoServicio tipo) {
+    switch (tipo) {
+      case EnumTipoServicio.github:
+        return 'assets/svg/github.svg';
+      default:
+        return 'assets/svg/default_account.svg';
+    }
   }
 }

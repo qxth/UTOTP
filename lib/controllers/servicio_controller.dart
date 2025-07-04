@@ -7,12 +7,18 @@ import '../core/alpha_storage.dart';
 import '../core/enums/render_enum.dart';
 import '../core/enums/storage_enum.dart';
 import '../core/totp.dart';
+import '../models/servicio_modal.dart';
+import '../ui/widgets/wg.dart';
 
 class ServicioController extends GetxController {
   final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600];
 
+  late final String _idService;
+  late final String _claveTotp;
+
   Timer? timer;
   String txtTiempo = "00:00";
+  RxString titulo = "".obs;
   RxString correo = "user@example.com".obs;
   RxString codigo2fa = "xxxxxx".obs;
 
@@ -25,9 +31,27 @@ class ServicioController extends GetxController {
   void onReady() async {
     super.onReady();
 
-    final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
-    setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
-    iniciarTemporizador();
+    try {
+      final servicesData = (await AlphaStorage.readJson(EnumAlphaStorage.services.name)) as Map<String, Map<String, dynamic>>?;
+
+      if (servicesData == null || servicesData[_idService] == null) {
+        WG.error(message: "El servicio que intenta cargar no existe.");
+        return;
+      }
+
+      final ServicioModal servicio = ServicioModal.fromJson(servicesData[_idService] as Map<String, dynamic>);
+
+      _idService = servicio.idServicio;
+      correo.value = servicio.correo;
+      titulo.value = servicio.titulo;
+      _claveTotp = servicio.claveTotp;
+
+      final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
+      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
+      iniciarTemporizador();
+    } catch (_) {
+      WG.error();
+    }
   }
 
   void setMilisegundosTemporizador({required int sec}) {
@@ -48,7 +72,6 @@ class ServicioController extends GetxController {
     }
 
     int expiracionInicial = -1;
-    final String secretKey = 'ABCDEFGHIJ';
 
     timer = Timer.periodic(Duration(milliseconds: 60), (_) async {
       DateTime now = DateTime.now();
@@ -61,7 +84,7 @@ class ServicioController extends GetxController {
 
       if (expiracionInicial != expiracion) {
         expiracionInicial = expiracion;
-        final totp = await Totp.generate(secretKey, period: segundosLimite);
+        final totp = await Totp.generate(_claveTotp, period: segundosLimite);
         codigo2fa.value = totp.otp;
         // debugPrint('> Obteniendo OTP: $expiracion');
         debugPrint('Code: ${codigo2fa.value} | Sec: $segundosLimite');
