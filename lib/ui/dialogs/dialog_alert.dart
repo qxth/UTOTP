@@ -20,11 +20,11 @@ class DialogAlertState extends State<DialogAlert> {
   Color get backgroundColor {
     switch (widget.type) {
       case DialogType.success:
-        return Paleta.verde_oscuro2;
+        return Paleta.pasto;
       case DialogType.warning:
-        return Paleta.naranja_oscuro;
+        return Paleta.mandarina;
       case DialogType.error:
-        return Paleta.rojo_oscuro;
+        return Paleta.rojo;
     }
   }
 
@@ -42,11 +42,11 @@ class DialogAlertState extends State<DialogAlert> {
   Color get iconColor {
     switch (widget.type) {
       case DialogType.success:
-        return Paleta.verde_claro2;
+        return Paleta.verde_menta;
       case DialogType.warning:
-        return Paleta.naranja_oscuro;
+        return Paleta.mandarina;
       case DialogType.error:
-        return Paleta.rojo_oscuro;
+        return Paleta.rojo;
     }
   }
 
@@ -63,7 +63,7 @@ class DialogAlertState extends State<DialogAlert> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              boxShadow: const [BoxShadow(color: Paleta.negro_claro, offset: Offset(5, 5), blurRadius: 8)],
+              boxShadow: const [BoxShadow(color: Paleta.negro_suave_0_025, offset: Offset(5, 5), blurRadius: 8)],
             ),
             padding: const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 18),
             child: Column(

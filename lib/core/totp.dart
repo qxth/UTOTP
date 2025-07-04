@@ -79,7 +79,7 @@ class Totp {
     for (var i = 0; i < length; i++) {
       final int? charCode = _base32[str.codeUnitAt(i)];
       if (charCode == null) {
-        throw Exception("Invalid base32 character in key");
+        throw TOTPError.invalidBase32;
       }
       value = (value << 5) | charCode;
       bits += 5;
@@ -158,4 +158,8 @@ class TotpResult {
     return 'OTP: $otp\n'
         'Expires: ${expires.toIso8601String()}';
   }
+}
+
+class TOTPError {
+  static final invalidBase32 = "Invalid base32 character in key";
 }

@@ -5,6 +5,7 @@ import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
 import '../ui/utils/paleta.dart';
+import '../ui/widgets/wg.dart';
 
 class ServicioView extends GetView<ServicioController> {
   const ServicioView({super.key});
@@ -16,8 +17,15 @@ class ServicioView extends GetView<ServicioController> {
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.stacked_bar_chart), const Text('Servicio')]),
         backgroundColor: Paleta.azul_noche,
-        foregroundColor: Paleta.gris_claro,
-        actions: [IconButton(icon: const Icon(Icons.settings), onPressed: () {})],
+        foregroundColor: Paleta.gris_240,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              WG.mostrarModalServicio(servicioExistente: controller.servicioActual);
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

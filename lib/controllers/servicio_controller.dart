@@ -14,8 +14,9 @@ class ServicioController extends GetxController {
   final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600];
 
   late final String _idService;
-  late final String _claveTotp;
+  late String _claveTotp;
 
+  ServicioModal? servicioActual;
   Timer? timer;
   String txtTiempo = "00:00";
   RxString titulo = "".obs;
@@ -31,26 +32,48 @@ class ServicioController extends GetxController {
   void onReady() async {
     super.onReady();
 
-    try {
-      final servicesData = (await AlphaStorage.readJson(EnumAlphaStorage.services.name)) as Map<String, Map<String, dynamic>>?;
+    _idService = Get.arguments["id"];
+    await actualizarServicio();
 
-      if (servicesData == null || servicesData[_idService] == null) {
+    try {
+      final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
+      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
+      iniciarTemporizador();
+    } catch (_) {
+      WG.error();
+      rethrow;
+    }
+  }
+
+  Future<void> actualizarServicio() async {
+    try {
+      final servicesData = await AlphaStorage.readJson(EnumAlphaStorage.services.name);
+
+      if (servicesData == null || servicesData is! Map<String, dynamic>) {
+        WG.error(message: "No se encontraron servicios.");
+        return;
+      }
+
+      if (servicesData[_idService] == null) {
         WG.error(message: "El servicio que intenta cargar no existe.");
         return;
       }
 
       final ServicioModal servicio = ServicioModal.fromJson(servicesData[_idService] as Map<String, dynamic>);
 
-      _idService = servicio.idServicio;
+      if (_idService != servicio.idServicio) {
+        WG.error(message: "El servicio que intenta cargar no es identico al esperado.");
+        return;
+      }
+
+      servicioActual = servicio;
+
       correo.value = servicio.correo;
       titulo.value = servicio.titulo;
       _claveTotp = servicio.claveTotp;
-
-      final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
-      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
-      iniciarTemporizador();
-    } catch (_) {
+    } catch (ex) {
       WG.error();
+      rethrow;
     }
   }
 
@@ -84,8 +107,19 @@ class ServicioController extends GetxController {
 
       if (expiracionInicial != expiracion) {
         expiracionInicial = expiracion;
-        final totp = await Totp.generate(_claveTotp, period: segundosLimite);
-        codigo2fa.value = totp.otp;
+        try {
+          final totp = await Totp.generate(_claveTotp, period: segundosLimite);
+          codigo2fa.value = totp.otp;
+        } catch (ex) {
+          if (ex.toString() == TOTPError.invalidBase32) {
+            WG.error(message: "La clave totp no es válida.");
+            temporizadorIniciado.value = false;
+            cancelarTemporizador();
+          } else {
+            WG.error(message: "Error al generar el OTP.");
+          }
+          rethrow;
+        }
         // debugPrint('> Obteniendo OTP: $expiracion');
         debugPrint('Code: ${codigo2fa.value} | Sec: $segundosLimite');
       }

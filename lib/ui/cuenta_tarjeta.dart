@@ -28,12 +28,15 @@ class _EstadoCuentaTarjeta extends State<CuentaTarjeta> {
       onExit: (_) => setState(() => _estaSeleccionado = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => Get.toNamed(Rutas.servicio, arguments: {"id": "abc"}),
+        onTap: () => Get.toNamed(Rutas.servicio, arguments: {"id": widget.servicio.idServicio}),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            color: _estaSeleccionado ? (esModoOscuro ? Paleta.negro42 : Colors.grey[50]) : (esModoOscuro ? Paleta.negro30 : Colors.white),
+            color:
+                _estaSeleccionado
+                    ? (esModoOscuro ? Paleta.negro_42 : Colors.grey[50])
+                    : (esModoOscuro ? Paleta.negro_medio_30 : Colors.white),
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: _estaSeleccionado ? 20 : 12, offset: const Offset(0, 6)),
