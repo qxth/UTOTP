@@ -1,4 +1,19 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-dart run commitlint_cli --edit $1
+tmpfile=$(mktemp)
+
+while IFS= read -r line; do
+  # Ignorar líneas vacías
+  if [ -n "$line" ]; then
+    # echo "m: $line"
+    echo "$line" > "$tmpfile"
+    dart run commitlint_cli --edit "$tmpfile" || {
+      echo "⛔️ Error en convención: '$line'"
+      rm -f "$tmpfile"
+      exit 1
+    }
+  fi
+done < "$1"
+
+rm -f "$tmpfile"

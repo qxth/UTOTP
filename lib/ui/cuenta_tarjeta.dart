@@ -73,71 +73,68 @@ class _CuentaTarjetaState extends State<CuentaTarjeta> {
                 ),
               ],
             ),
-            child: Stack(
+            child: Row(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.transparent,
-                              child: SvgPicture.asset(WG.getIconoTipo(widget.servicio.tipo), height: 60, width: 60),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.servicio.titulo.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: esModoOscuro ? Colors.white : Colors.black87,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    widget.servicio.correo,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: esModoOscuro ? Colors.grey[100] : Colors.black87,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.transparent,
+                          child: SvgPicture.asset(WG.getIconoTipo(widget.servicio.tipo), height: 60, width: 60),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                widget.servicio.titulo.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: esModoOscuro ? Colors.white : Colors.black87,
+                                  letterSpacing: 1.2,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: 40,
-                  child: MouseRegion(
-                    onEnter: (_) => _estaHoverEliminacion.value = true,
-                    onExit: (_) => _estaHoverEliminacion.value = false,
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: _eliminarServicio,
-                      child: Obx(
-                        () => Container(
-                          decoration: BoxDecoration(
-                            color: _estaHoverEliminacion.value ? Paleta.granate.withValues(alpha: 0.8) : Paleta.granate,
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(24), bottomRight: Radius.circular(24)),
+                              const SizedBox(height: 4),
+                              Text(
+                                widget.servicio.correo,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: esModoOscuro ? Colors.grey[100] : Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ],
                           ),
-                          child: Center(child: Icon(Icons.delete_outline, color: Colors.white, size: 24)),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+                MouseRegion(
+                  onEnter: (_) => _estaHoverEliminacion.value = true,
+                  onExit: (_) => _estaHoverEliminacion.value = false,
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: _eliminarServicio,
+                    child: Obx(
+                      () => Container(
+                        width: 50,
+                        height: 100, // Fixed height
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: _estaHoverEliminacion.value ? Paleta.granate.withValues(alpha: 0.8) : Paleta.granate,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(24), bottomRight: Radius.circular(24)),
+                        ),
+                        child: Icon(Icons.delete_outline, color: Colors.white, size: 24),
                       ),
                     ),
                   ),

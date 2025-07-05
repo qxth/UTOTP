@@ -29,16 +29,11 @@ class _ModalServicioState extends State<ModalServicio> {
   late FocusNode _claveTotpFocus;
   final RegExp _correoRegExp = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
 
-  // Convert _tipoSeleccionado to Rx
   final Rx<EnumTipoServicio> _tipoSeleccionado = EnumTipoServicio.github.obs;
+  final RxBool _claveVisible = false.obs;
+  final RxString _confirmacionTexto = ''.obs;
 
   String? _idServicio;
-
-  // Convertir a Rx para observabilidad
-  final RxBool _claveVisible = false.obs;
-
-  // Controlador para la confirmación con Rx
-  final RxString _confirmacionTexto = ''.obs;
 
   @override
   void initState() {
@@ -137,7 +132,14 @@ class _ModalServicioState extends State<ModalServicio> {
                               child: Row(
                                 children: [
                                   Text('Anterior: ', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[600])),
-                                  Text(correoAnterior, style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w500)),
+                                  Expanded(
+                                    child: Text(
+                                      correoAnterior,
+                                      style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -152,7 +154,14 @@ class _ModalServicioState extends State<ModalServicio> {
                               child: Row(
                                 children: [
                                   Text('Nuevo: ', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red[600])),
-                                  Text(correoNuevo, style: TextStyle(color: Colors.red[800], fontWeight: FontWeight.w500)),
+                                  Expanded(
+                                    child: Text(
+                                      correoNuevo,
+                                      style: TextStyle(color: Colors.red[800], fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -192,7 +201,13 @@ class _ModalServicioState extends State<ModalServicio> {
                               child: Row(
                                 children: [
                                   Text('Estado: ', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[600])),
-                                  Text('MODIFICADA', style: TextStyle(color: Paleta.mandarina, fontWeight: FontWeight.bold)),
+                                  Expanded(
+                                    child: Text(
+                                      'MODIFICADA',
+                                      style: TextStyle(color: Paleta.mandarina, fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -218,20 +233,17 @@ class _ModalServicioState extends State<ModalServicio> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                Obx(
-                  () => TextField(
-                    controller: confirmController,
-                    decoration: InputDecoration(
-                      hintText: 'Escriba SI para confirmar',
-                      filled: true,
-                      fillColor: esModoOscuro ? Paleta.negro_medio_30 : Paleta.lavanda_claro,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-                    ),
-                    onChanged: (value) {
-                      _confirmacionTexto.value = value;
-                    },
+                TextField(
+                  controller: confirmController,
+                  decoration: InputDecoration(
+                    hintText: 'Escriba SI para confirmar',
+                    filled: true,
+                    fillColor: esModoOscuro ? Paleta.negro_medio_30 : Paleta.lavanda_claro,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                   ),
+                  onChanged: (value) {
+                    _confirmacionTexto.value = value;
+                  },
                 ),
               ],
             ),
