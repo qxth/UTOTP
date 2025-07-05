@@ -28,19 +28,60 @@ class InicioView extends GetView<InicioController> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-          child: Obx(
-            () =>
-                controller.servicios.value.isEmpty
-                    ? const Center(child: Text('No hay servicios'))
-                    : Column(
+        child: Obx(
+          () =>
+              controller.servicios.value.isEmpty
+                  ? _noHayServicios(context)
+                  : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      spacing: 10,
+                      spacing: 15,
                       children: controller.servicios.value.map((sv) => CuentaTarjeta(servicio: sv)).toList(),
                     ),
-          ),
+                  ),
+        ),
+      ),
+    );
+  }
+
+  Widget _noHayServicios(BuildContext context) {
+    final mq = MediaQuery.of(context);
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: mq.size.height - kToolbarHeight - mq.padding.top - mq.padding.bottom - 50),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Icon(Icons.home_repair_service, size: 100, color: Paleta.violeta.withValues(alpha: 0.6)),
+            const SizedBox(height: 20),
+            Text(
+              'No hay servicios',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Paleta.azul_noche.withValues(alpha: 0.7)),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Agrega un nuevo servicio para generar\ncódigos de autenticación de dos factores',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Paleta.negro_42.withValues(alpha: 0.5)),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: () => WG.mostrarModalServicio(servicioExistente: null),
+              icon: const Icon(Icons.add_circle_outline),
+              label: const Text('Agregar Servicio'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Paleta.violeta,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -71,7 +71,7 @@ class ServicioController extends GetxController {
       correo.value = servicio.correo;
       titulo.value = servicio.titulo;
       _claveTotp = servicio.claveTotp;
-    } catch (ex) {
+    } catch (_) {
       WG.error();
       rethrow;
     }
