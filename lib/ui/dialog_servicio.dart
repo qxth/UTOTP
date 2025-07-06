@@ -32,6 +32,7 @@ class _ModalServicioState extends State<ModalServicio> {
   final Rx<EnumTipoServicio> _tipoSeleccionado = EnumTipoServicio.github.obs;
   final RxBool _claveVisible = false.obs;
   final RxString _confirmacionTexto = ''.obs;
+  late final Rx<ServicioModal?> servicioExistente = Rx(null);
 
   String? _idServicio;
 
@@ -42,14 +43,18 @@ class _ModalServicioState extends State<ModalServicio> {
     _tituloFocus = FocusNode();
     _claveTotpFocus = FocusNode();
 
-    _correoController = TextEditingController(text: widget.servicioExistente?.correo ?? '');
-    _tituloController = TextEditingController(text: widget.servicioExistente?.titulo ?? 'GitHub');
-    _claveTotpController = TextEditingController(text: widget.servicioExistente?.claveTotp ?? '');
+    if (widget.servicioExistente != null) {
+      servicioExistente.value = widget.servicioExistente;
+    }
 
-    _tipoSeleccionado.value = widget.servicioExistente?.tipo ?? EnumTipoServicio.github;
+    _correoController = TextEditingController(text: servicioExistente.value?.correo ?? '');
+    _tituloController = TextEditingController(text: servicioExistente.value?.titulo ?? 'GitHub');
+    _claveTotpController = TextEditingController(text: servicioExistente.value?.claveTotp ?? '');
 
-    if (widget.servicioExistente?.idServicio != null && widget.servicioExistente!.idServicio.isNotEmpty) {
-      _idServicio = widget.servicioExistente!.idServicio;
+    _tipoSeleccionado.value = servicioExistente.value?.tipo ?? EnumTipoServicio.github;
+
+    if (servicioExistente.value?.idServicio != null && servicioExistente.value!.idServicio.isNotEmpty) {
+      _idServicio = servicioExistente.value!.idServicio;
     } else {
       _idServicio = _generarIdServicio();
     }
@@ -338,15 +343,14 @@ class _ModalServicioState extends State<ModalServicio> {
     }
 
     bool hayCambiosSensibles =
-        widget.servicioExistente != null &&
-        (widget.servicioExistente!.correo != correo || widget.servicioExistente!.claveTotp != claveTotp);
+        servicioExistente.value != null && (servicioExistente.value!.correo != correo || servicioExistente.value!.claveTotp != claveTotp);
 
     if (hayCambiosSensibles) {
       final confirmacion = await _mostrarDialogoConfirmacion(
         context,
-        correoAnterior: widget.servicioExistente?.correo ?? '',
+        correoAnterior: servicioExistente.value?.correo ?? '',
         correoNuevo: correo,
-        claveAnterior: widget.servicioExistente?.claveTotp ?? '',
+        claveAnterior: servicioExistente.value?.claveTotp ?? '',
         claveNueva: claveTotp,
       );
 
@@ -421,7 +425,7 @@ class _ModalServicioState extends State<ModalServicio> {
                         Icon(Icons.settings, color: Paleta.violeta, size: 32),
                         const SizedBox(width: 12),
                         Text(
-                          widget.servicioExistente == null ? 'Crear Servicio' : 'Editar Servicio',
+                          servicioExistente.value == null ? 'Crear Servicio' : 'Editar Servicio',
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: esModoOscuro ? Colors.white : Paleta.purpura),
                         ),
                       ],
@@ -559,15 +563,15 @@ class _ModalServicioState extends State<ModalServicio> {
   }
 
   bool _hayCambios() {
-    if (widget.servicioExistente == null) return true;
+    if (servicioExistente.value == null) return true;
 
     final correo = _correoController.text.trim();
     final titulo = _tituloController.text.trim();
     final claveTotp = _claveTotpController.text.trim();
 
-    return correo != widget.servicioExistente!.correo ||
-        titulo != widget.servicioExistente!.titulo ||
-        claveTotp != widget.servicioExistente!.claveTotp ||
-        _tipoSeleccionado.value != widget.servicioExistente!.tipo;
+    return correo != servicioExistente.value!.correo ||
+        titulo != servicioExistente.value!.titulo ||
+        claveTotp != servicioExistente.value!.claveTotp ||
+        _tipoSeleccionado.value != servicioExistente.value!.tipo;
   }
 }

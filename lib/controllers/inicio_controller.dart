@@ -12,6 +12,10 @@ class InicioController extends GetxController {
   void onInit() async {
     super.onInit();
 
+    await actualizarServicios();
+  }
+
+  Future<void> actualizarServicios() async {
     final data = await AlphaStorage.readJson(EnumAlphaStorage.services.name);
 
     if (data != null && data is Map<String, dynamic>) {
