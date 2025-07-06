@@ -49,11 +49,9 @@ class DialogCustomState extends State<DialogCustom> {
                 Center(child: Text(widget.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600))),
                 const SizedBox(height: 16),
 
-                // Label Categoria
                 const Text("Categorías", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
 
-                // Dropdown Categorías
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
@@ -73,11 +71,9 @@ class DialogCustomState extends State<DialogCustom> {
 
                 const SizedBox(height: 16),
 
-                // Label Tarea
                 const Text("Tarea", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
 
-                // Input tarea
                 TextFormField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -90,7 +86,6 @@ class DialogCustomState extends State<DialogCustom> {
 
                 const SizedBox(height: 20),
 
-                // Botón Guardar
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

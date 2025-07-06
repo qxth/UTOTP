@@ -104,7 +104,6 @@ class _ModalServicioState extends State<ModalServicio> {
                 ),
                 const SizedBox(height: 16),
 
-                // Cambios de correo
                 if (correoAnterior != correoNuevo) ...[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +172,6 @@ class _ModalServicioState extends State<ModalServicio> {
                   const SizedBox(height: 16),
                 ],
 
-                // Cambios de clave secreta
                 if (claveAnterior != claveNueva) ...[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +217,6 @@ class _ModalServicioState extends State<ModalServicio> {
                   const SizedBox(height: 16),
                 ],
 
-                // Advertencia
                 Row(
                   children: [
                     Icon(Icons.error_outline, color: Colors.red[700], size: 24),
@@ -365,9 +362,7 @@ class _ModalServicioState extends State<ModalServicio> {
       idServicio: idServicio,
       claveTotp: claveTotp,
     );
-    // debugPrint('Servicio: ${nuevoServicio.toJson()}');
 
-    // Leer servicios existentes
     Map<String, dynamic> serviciosMap = {};
     final data = await AlphaStorage.readJson(EnumAlphaStorage.services.name);
 
@@ -522,7 +517,6 @@ class _ModalServicioState extends State<ModalServicio> {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    // Botones con fondo
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -538,17 +532,19 @@ class _ModalServicioState extends State<ModalServicio> {
                           ),
                           child: const Text('Cancelar'),
                         ),
-                        ElevatedButton(
-                          onPressed: _hayCambios() ? _guardarServicio : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Paleta.violeta,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                            textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            elevation: 2,
+                        Obx(
+                          () => ElevatedButton(
+                            onPressed: _hayCambios() ? _guardarServicio : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Paleta.violeta,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              elevation: 2,
+                            ),
+                            child: const Text('Guardar'),
                           ),
-                          child: const Text('Guardar'),
                         ),
                       ],
                     ),
@@ -563,7 +559,6 @@ class _ModalServicioState extends State<ModalServicio> {
   }
 
   bool _hayCambios() {
-    // If no existing service, always has changes (new service)
     if (widget.servicioExistente == null) return true;
 
     final correo = _correoController.text.trim();
