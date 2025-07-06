@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../utils/paleta.dart';
 
 class DialogCustom extends StatefulWidget {
@@ -14,7 +15,7 @@ class DialogCustom extends StatefulWidget {
     required this.categories,
     required this.onSave,
     this.buttonColor = Paleta.azul_noche,
-    this.buttonTextColor = Paleta.gris_claro,
+    this.buttonTextColor = Paleta.gris_240,
   });
 
   @override
@@ -33,9 +34,9 @@ class DialogCustomState extends State<DialogCustom> {
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-            color: Paleta.gris_claro,
+            color: Paleta.gris_240,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: const [BoxShadow(color: Paleta.negro_claro, offset: Offset(6, 6), spreadRadius: 2, blurRadius: 4)],
+            boxShadow: const [BoxShadow(color: Paleta.negro_suave_0_025, offset: Offset(6, 6), spreadRadius: 2, blurRadius: 4)],
           ),
           padding: const EdgeInsets.all(16),
           child: Form(
@@ -44,7 +45,7 @@ class DialogCustomState extends State<DialogCustom> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(alignment: Alignment.topRight, child: CloseButton(onPressed: () => Navigator.of(context).pop())),
+                Align(alignment: Alignment.topRight, child: CloseButton(onPressed: () => Get.back())),
                 Center(child: Text(widget.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600))),
                 const SizedBox(height: 16),
 
@@ -56,9 +57,9 @@ class DialogCustomState extends State<DialogCustom> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Paleta.gris_claro,
+                    color: Paleta.gris_240,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Paleta.gris_oscuro),
+                    border: Border.all(color: Paleta.gris_medio_189),
                   ),
                   child: DropdownButtonFormField<String>(
                     value: _category,
@@ -81,7 +82,7 @@ class DialogCustomState extends State<DialogCustom> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     filled: true,
-                    fillColor: Paleta.gris_claro,
+                    fillColor: Paleta.gris_240,
                   ),
                   onChanged: (value) => _task = value,
                   validator: (value) => value == null || value.isEmpty ? 'Por favor ingresa una tarea' : null,
@@ -96,7 +97,7 @@ class DialogCustomState extends State<DialogCustom> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         widget.onSave(_category!, _task);
-                        Navigator.of(context).pop();
+                        Get.back();
                       }
                     },
                     style: ButtonStyle(

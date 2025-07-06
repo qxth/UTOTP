@@ -27,9 +27,8 @@ class _LineaTiempoState extends State<LineaTiempo> {
     debugPrint('> Render $this');
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 5,
       children: [
-        Obx(() => Text(controller.labelTiempo(), style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold))),
+        Obx(() => Text(controller.label(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
         Obx(
           () => Slider(
             min: 0,
@@ -37,6 +36,7 @@ class _LineaTiempoState extends State<LineaTiempo> {
             value: controller.indiceTiempo.value.toDouble(),
             divisions: controller.listaTiempos.length - 1,
             label: controller.label(),
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
             onChanged: (double value) {
               controller.indiceTiempo.value = value.round();
               final segundosActuales = controller.listaTiempos[controller.indiceTiempo.value];
