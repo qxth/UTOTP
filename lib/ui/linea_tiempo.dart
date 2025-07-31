@@ -62,7 +62,6 @@ class LineaTiempoController extends GetxController {
     super.onInit();
 
     final int? idxTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
-    // debugPrint('Indice Store X: $idxTiempo');
     setTiempo(idxTiempo: idxTiempo);
   }
 

@@ -37,6 +37,6 @@ class ServicioModal {
 
   @override
   String toString() {
-    return 'Servicio(tipo: $tipo, correo: $correo, titulo: $titulo, idServicio: $idServicio)';
+    return 'Servicio(idServicio: $idServicio, tipo: $tipo, correo: $correo, titulo: $titulo)';
   }
 }

@@ -128,7 +128,7 @@ class _CuentaTarjetaState extends State<CuentaTarjeta> {
                     child: Obx(
                       () => Container(
                         width: 50,
-                        height: 100, // Fixed height
+                        height: 100,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: _estaHoverEliminacion.value ? Paleta.granate.withValues(alpha: 0.8) : Paleta.granate,
