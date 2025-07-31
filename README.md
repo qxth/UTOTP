@@ -2,6 +2,29 @@
 
 TOTP (Time-based One-Time Password) para Flutter.
 
+## ⚠️ IMPORTANTE!
+
+**⚠️ ADVERTENCIA CRÍTICA PARA USUARIOS DE GITHUB ⚠️**
+
+Si utilizas **GitHub** para generar códigos TOTP, es **OBLIGATORIO** configurar el tiempo de expiración en <span style="color: #ff6b6b; font-weight: bold; font-size: 1.1em;">30 segundos</span> para que la aplicación funcione correctamente.
+
+**¿Por qué es importante?**
+
+- GitHub utiliza un intervalo de tiempo específico de 30 segundos para sus códigos TOTP
+- Si configuras un tiempo diferente, la aplicación no podrá generar códigos válidos
+- Esto causará errores de autenticación y no podrás acceder a tu cuenta
+
+**Configuración recomendada:**
+
+- **Servicio:** GitHub
+- **Tiempo:** <span style="color: #ff6b6b; font-weight: bold;">30 segundos</span>
+- **Algoritmo:** SHA1 (por defecto)
+- **Dígitos:** 6 (por defecto)
+
+<div align="center">
+  <img src="docs/captura.png" alt="Captura de pantalla" />
+</div>
+
 ---
 
 ## 📋 Versión de Flutter
@@ -33,14 +56,17 @@ dart run husky install
 ## 🧹 Comandos adicionales dart
 
 - Analizar archivos/carpetas dart
+
 ```bash
 dart analyze lib
 ```
+
 ```bash
 dart analyze lib/file.dart
 ```
 
 - Reparacion de dart
+
 ```bash
 dart fix --apply --code=unused_import --code=unnecessary_new --code=unnecessary_this --code=prefer_collection_literals --code=unnecessary_const --code=unnecessary_import --code=prefer_const_constructors --code=use_key_in_widget_constructors --code=duplicate_import --code=prefer_relative_imports
 ```
@@ -51,16 +77,20 @@ dart fix --apply --code=unused_import --code=unnecessary_new --code=unnecessary_
 <summary>Expandir</summary>
 
 ### 📋 Permisos Husky
+
 ```bash
 chmod +x .husky/pre-commit
 chmod +x .husky/commit-msg
 ```
+
 - Opcional
+
 ```bash
 chmod +x .husky/*
 ```
 
 ### ✅ Instalación de Husky
+
 ```bash
 dart pub add --dev husky
 ```
@@ -81,7 +111,8 @@ dart pub add --dev lint_staged
 
 > 💡 Revisa el archivo de configuración para asegurar que se ejecute el lint en los archivos modificados.
 
-### 🧹 Integrar Commitlint  con Husky
+### 🧹 Integrar Commitlint con Husky
+
 ```bash
 dart pub add --dev commitlint_cli
 ```
@@ -89,7 +120,6 @@ dart pub add --dev commitlint_cli
 ```bash
 dart run husky add .husky/commit-msg 'dart run commitlint_cli --edit $1'
 ```
-
 
 ### 💬 Realizar commits con Husky activado
 
@@ -100,6 +130,7 @@ git commit -a -m "mensaje"
 </details>
 
 ---
+
 ## 📱 Comandos útiles de ADB
 
 Asegúrate de tener `adb` instalado desde el Android SDK. Luego, puedes ejecutar los siguientes comandos desde PowerShell:
@@ -152,19 +183,24 @@ adb -s <ip_emulador|nombre_emulador> push "$env:homepath\Downloads\fichero.txt" 
 ```
 
 ### 📦 Bajar archivos desde emulador a host
+
 ```powershell
-adb -s <ip_emulador|nombre_emulador> pull /storage/emulated/0/Download/fichero.txt "$env:homepath\Downloads\" 
+adb -s <ip_emulador|nombre_emulador> pull /storage/emulated/0/Download/fichero.txt "$env:homepath\Downloads\"
 ```
 
 > Útil para dispositivos conectados remotamente.
 
 ---
+
 </details>
 
 ## 📋 Otras notas
+
 ### 📦 Visualizar markdown desde android studio
+
 - Ir a Navigate > Search Everywhere > escribir `choose boot Java Runtime` y elegir el recomendado, instalar y reiniciar
 - Nota: Cerrar todas las pestañas que tengan markdown y abrir de nuevo
 
 ## 🔗 Enlaces útiles
+
 - [🔧 Integración de lint-staged y Husky en Flutter](https://thisiscem.medium.com/boosting-code-quality-in-your-flutter-projects-lint-staged-and-husky-integration-4bcee79bbb85)
