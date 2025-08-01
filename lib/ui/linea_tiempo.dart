@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../core/alpha_storage.dart';
-import '../core/enums/storage_enum.dart';
-
 class LineaTiempo extends StatefulWidget {
+  final int idxTiempoInicial;
   final Function({required int sec, required int idx}) callback;
   final List<int> lista;
-  const LineaTiempo({super.key, required this.callback, required this.lista});
+
+  const LineaTiempo({super.key, required this.callback, required this.lista, required this.idxTiempoInicial});
 
   @override
   State<LineaTiempo> createState() => _LineaTiempoState();
@@ -19,7 +18,8 @@ class _LineaTiempoState extends State<LineaTiempo> {
   @override
   void initState() {
     super.initState();
-    controller = Get.put(LineaTiempoController(widget.lista));
+
+    controller = Get.put(LineaTiempoController(listaTiempos: widget.lista, idxTiempo: widget.idxTiempoInicial));
   }
 
   @override
@@ -39,6 +39,9 @@ class _LineaTiempoState extends State<LineaTiempo> {
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
             onChanged: (double value) {
               controller.indiceTiempo.value = value.round();
+            },
+            onChangeEnd: (value) {
+              controller.indiceTiempo.value = value.round();
               final segundosActuales = controller.listaTiempos[controller.indiceTiempo.value];
               widget.callback(sec: segundosActuales, idx: controller.indiceTiempo.value);
             },
@@ -55,14 +58,15 @@ class LineaTiempoController extends GetxController {
   final List<int> listaTiempos;
   RxInt indiceTiempo = RxInt(0);
 
-  LineaTiempoController(this.listaTiempos);
+  LineaTiempoController({required this.listaTiempos, required idxTiempo}) {
+    indiceTiempo.value = idxTiempo;
+  }
 
   @override
   void onInit() async {
     super.onInit();
 
-    final int? idxTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
-    setTiempo(idxTiempo: idxTiempo);
+    setTiempo(idxTiempo: indiceTiempo.value);
   }
 
   String label() {

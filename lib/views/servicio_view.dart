@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/servicio_controller.dart';
+import '../models/servicio_modal.dart';
 import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
@@ -13,6 +14,16 @@ class ServicioView extends GetView<ServicioController> {
   @override
   Widget build(BuildContext context) {
     debugPrint('> Render Servicio: $this');
+    return Obx(() {
+      if (controller.cargando.value) {
+        return CircularProgressIndicator();
+      }
+
+      return _contenido();
+    });
+  }
+
+  _contenido() {
     return Scaffold(
       appBar: AppBar(
         title: Row(spacing: 15, children: [Icon(Icons.stacked_bar_chart), const Text('Servicio')]),
@@ -36,9 +47,33 @@ class ServicioView extends GetView<ServicioController> {
             spacing: 15,
             children: [
               Obx(() => Tarjeta(text: controller.correo.value)),
+              Obx(() => Tarjeta(text: controller.tipoServicio.value.name)),
+              if (controller.tipoServicio.value == EnumTipoServicio.github && controller.segundosLimite.value != controller.tiempo30Sec)
+                IntrinsicWidth(
+                  child: Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 6,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Text(
+                          'Advertencia! Establecer el tiempo en 30 segundos',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Paleta.rojo),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
               Temporizador(),
               Obx(() => Tarjeta(text: controller.codigo2fa.value)),
-              LineaTiempo(callback: controller.setMilisegundosTemporizadorStore, lista: controller.lineaTiempo),
+              LineaTiempo(
+                callback: controller.setMilisegundosTemporizadorStore,
+                idxTiempoInicial: controller.indiceTiempoInicial,
+                lista: controller.lineaTiempo,
+              ),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
                 child: Container(

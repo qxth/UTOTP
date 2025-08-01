@@ -1,48 +1,73 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../core/alpha_storage.dart';
 import '../core/enums/render_enum.dart';
 import '../core/enums/storage_enum.dart';
+import '../core/navigator.dart';
 import '../core/totp.dart';
 import '../models/servicio_modal.dart';
+import '../ui/dialogs/dialog_alert.dart';
 import '../ui/widgets/wg.dart';
 
 class ServicioController extends GetxController {
   final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600];
+  final GlobalKey _keyAdvertenciaGithub = GlobalKey();
+  final defaultIndiceTiempo30Sec = 4;
+  final RxBool cargando = true.obs;
+  final int tiempo30Sec = 30;
 
+  late final int indiceTiempoInicial;
   late final String _idService;
   late String _claveTotp;
 
   ServicioModal? servicioActual;
   Timer? timer;
+  // Timer? timerAdvertencia;
   String txtTiempo = "00:00";
   RxString titulo = "".obs;
   RxString correo = "user@example.com".obs;
   RxString codigo2fa = "xxxxxx".obs;
+  Rx<EnumTipoServicio> tipoServicio = Rx(EnumTipoServicio.github);
 
   int milisegundosLimite = Duration.millisecondsPerSecond;
-  int segundosLimite = 0;
+  RxInt segundosLimite = 0.obs;
   double progreso = 0;
   RxBool temporizadorIniciado = false.obs;
 
   @override
-  void onReady() async {
-    super.onReady();
+  Future<void> onInit() async {
+    super.onInit();
 
     _idService = Get.arguments["id"];
     await actualizarServicio();
 
     try {
-      final int? indiceTiempo = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name);
-      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo ?? 0]);
+      debugPrint('GB: ${tipoServicio.value.name}');
+      if (tipoServicio.value == EnumTipoServicio.github) {
+        // # Iniciamos con 30 segundos para GITHUB siempre
+        indiceTiempoInicial = defaultIndiceTiempo30Sec;
+      } else {
+        indiceTiempoInicial = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name) ?? defaultIndiceTiempo30Sec;
+      }
+
+      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempoInicial]);
       iniciarTemporizador();
     } catch (_) {
       WG.error();
       rethrow;
     }
+
+    cargando.value = false;
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    // timerAdvertencia?.cancel();
+    super.dispose();
   }
 
   Future<void> actualizarServicio() async {
@@ -68,6 +93,7 @@ class ServicioController extends GetxController {
 
       servicioActual = servicio;
 
+      tipoServicio.value = servicio.tipo;
       correo.value = servicio.correo;
       titulo.value = servicio.titulo;
       _claveTotp = servicio.claveTotp;
@@ -78,7 +104,11 @@ class ServicioController extends GetxController {
   }
 
   void setMilisegundosTemporizador({required int sec}) {
-    segundosLimite = sec;
+    debugPrint('Tiempo: $sec');
+    if (tipoServicio.value == EnumTipoServicio.github && sec != tiempo30Sec) {
+      advertenciaGitHub();
+    }
+    segundosLimite.value = sec;
     milisegundosLimite = Duration.millisecondsPerSecond * sec;
   }
 
@@ -94,6 +124,17 @@ class ServicioController extends GetxController {
       return;
     }
 
+    /*
+    if(tipoServicio.value == EnumTipoServicio.github) {
+      timerAdvertencia = Timer.periodic(Duration(seconds: 5), (timer) {
+        if(tipoServicio.value == EnumTipoServicio.github && segundosLimite != 30 &&
+            _keyAdvertenciaGithub.currentState?.mounted != true) {
+            advertenciaGitHub();
+        }
+      });
+    }
+     */
+
     int expiracionInicial = -1;
 
     timer = Timer.periodic(Duration(milliseconds: 60), (_) async {
@@ -108,7 +149,7 @@ class ServicioController extends GetxController {
       if (expiracionInicial != expiracion) {
         expiracionInicial = expiracion;
         try {
-          final totp = await Totp.generate(_claveTotp, period: segundosLimite);
+          final totp = await Totp.generate(_claveTotp, period: segundosLimite.value);
           codigo2fa.value = totp.otp;
         } catch (ex) {
           if (ex.toString() == TOTPError.invalidBase32) {
@@ -133,6 +174,7 @@ class ServicioController extends GetxController {
 
   void cancelarTemporizador() {
     timer?.cancel();
+    // timerAdvertencia?.cancel();
     update([RenderId.servicioProgresoTemporizador]);
   }
 
@@ -146,6 +188,23 @@ class ServicioController extends GetxController {
     final s = sec.toString().padLeft(2, '0');
 
     txtTiempo = '$m:$s';
+  }
+
+  void advertenciaGitHub() {
+    if (_keyAdvertenciaGithub.currentContext?.mounted == true) {
+      return;
+    }
+    showDialog(
+      context: GlobalNavigator.key.currentContext!,
+      builder:
+          (BuildContext context) => DialogAlert(
+            key: _keyAdvertenciaGithub,
+            title: 'Advertencia',
+            message: 'Para GitHub debe establecer el tiempo en 30 segundos, para evitar conflictos con la cuenta.',
+            type: DialogType.warning,
+          ),
+    );
+    // WG.advertencia(message: );
   }
 
   /*

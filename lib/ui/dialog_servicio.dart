@@ -27,11 +27,12 @@ class _ModalServicioState extends State<ModalServicio> {
   late FocusNode _correoFocus;
   late FocusNode _tituloFocus;
   late FocusNode _claveTotpFocus;
-  final RegExp _correoRegExp = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
 
+  final RegExp _correoRegExp = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
   final Rx<EnumTipoServicio> _tipoSeleccionado = EnumTipoServicio.github.obs;
   final RxBool _claveVisible = false.obs;
   final RxString _confirmacionTexto = ''.obs;
+  final RxBool _tieneCambios = false.obs;
   late final Rx<ServicioModal?> servicioExistente = Rx(null);
 
   String? _idServicio;
@@ -58,6 +59,8 @@ class _ModalServicioState extends State<ModalServicio> {
     } else {
       _idServicio = _generarIdServicio();
     }
+
+    _comprobarHayCambios();
   }
 
   @override
@@ -464,6 +467,7 @@ class _ModalServicioState extends State<ModalServicio> {
                             ],
                             onChanged: (value) {
                               _tipoSeleccionado.value = value!;
+                              _comprobarHayCambios();
                             },
                           ),
                         ),
@@ -481,6 +485,9 @@ class _ModalServicioState extends State<ModalServicio> {
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
                         prefixIcon: Icon(Icons.title_outlined, color: Paleta.verde_petroleo),
                       ),
+                      onChanged: (value) {
+                        _comprobarHayCambios();
+                      },
                     ),
                     const SizedBox(height: 18),
                     TextField(
@@ -495,6 +502,9 @@ class _ModalServicioState extends State<ModalServicio> {
                         prefixIcon: Icon(Icons.email_outlined, color: Paleta.violeta),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        _comprobarHayCambios();
+                      },
                     ),
 
                     const SizedBox(height: 18),
@@ -518,6 +528,9 @@ class _ModalServicioState extends State<ModalServicio> {
                         ),
                         obscureText: !_claveVisible.value,
                         keyboardType: TextInputType.visiblePassword,
+                        onChanged: (value) {
+                          _comprobarHayCambios();
+                        },
                       ),
                     ),
                     const SizedBox(height: 28),
@@ -538,7 +551,7 @@ class _ModalServicioState extends State<ModalServicio> {
                         ),
                         Obx(
                           () => ElevatedButton(
-                            onPressed: _hayCambios() ? _guardarServicio : null,
+                            onPressed: _tieneCambios.value ? _guardarServicio : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Paleta.violeta,
                               foregroundColor: Colors.white,
@@ -562,14 +575,18 @@ class _ModalServicioState extends State<ModalServicio> {
     );
   }
 
-  bool _hayCambios() {
-    if (servicioExistente.value == null) return true;
+  void _comprobarHayCambios() {
+    if (servicioExistente.value == null) {
+      _tieneCambios.value = true;
+      return;
+    }
 
     final correo = _correoController.text.trim();
     final titulo = _tituloController.text.trim();
     final claveTotp = _claveTotpController.text.trim();
 
-    return correo != servicioExistente.value!.correo ||
+    _tieneCambios.value =
+        correo != servicioExistente.value!.correo ||
         titulo != servicioExistente.value!.titulo ||
         claveTotp != servicioExistente.value!.claveTotp ||
         _tipoSeleccionado.value != servicioExistente.value!.tipo;
