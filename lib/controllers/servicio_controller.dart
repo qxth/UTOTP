@@ -13,29 +13,30 @@ import '../ui/dialogs/dialog_alert.dart';
 import '../ui/widgets/wg.dart';
 
 class ServicioController extends GetxController {
-  final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600];
-  final GlobalKey _keyAdvertenciaGithub = GlobalKey();
-  final defaultIndiceTiempo30Sec = 4;
-  final RxBool cargando = true.obs;
-  final int tiempo30Sec = 30;
-
-  late final int indiceTiempoInicial;
+  final RxInt indiceTiempo = RxInt(0);
   late final String _idService;
   late String _claveTotp;
 
+  final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300];
+  final GlobalKey _keyAdvertenciaGithub = GlobalKey();
+  final defaultIndiceTiempo30Sec = 4;
+  final int tm30Sec = 30;
+
+  final RxBool cargando = true.obs;
+  final RxString titulo = "".obs;
+  final RxString correo = "user@example.com".obs;
+  final RxString codigo2fa = "xxxxxx".obs;
+  final Rx<EnumTipoServicio> tipoServicio = Rx(EnumTipoServicio.github);
+
+  final RxInt segundosLimite = 0.obs;
+  final RxBool temporizadorIniciado = false.obs;
+
   ServicioModal? servicioActual;
   Timer? timer;
-  // Timer? timerAdvertencia;
   String txtTiempo = "00:00";
-  RxString titulo = "".obs;
-  RxString correo = "user@example.com".obs;
-  RxString codigo2fa = "xxxxxx".obs;
-  Rx<EnumTipoServicio> tipoServicio = Rx(EnumTipoServicio.github);
 
   int milisegundosLimite = Duration.millisecondsPerSecond;
-  RxInt segundosLimite = 0.obs;
   double progreso = 0;
-  RxBool temporizadorIniciado = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -45,15 +46,6 @@ class ServicioController extends GetxController {
     await actualizarServicio();
 
     try {
-      debugPrint('GB: ${tipoServicio.value.name}');
-      if (tipoServicio.value == EnumTipoServicio.github) {
-        // # Iniciamos con 30 segundos para GITHUB siempre
-        indiceTiempoInicial = defaultIndiceTiempo30Sec;
-      } else {
-        indiceTiempoInicial = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo.name) ?? defaultIndiceTiempo30Sec;
-      }
-
-      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempoInicial]);
       iniciarTemporizador();
     } catch (_) {
       WG.error();
@@ -66,13 +58,12 @@ class ServicioController extends GetxController {
   @override
   void dispose() {
     timer?.cancel();
-    // timerAdvertencia?.cancel();
     super.dispose();
   }
 
   Future<void> actualizarServicio() async {
     try {
-      final servicesData = await AlphaStorage.readJson(EnumAlphaStorage.services.name);
+      final servicesData = await AlphaStorage.readJson(EnumAlphaStorage.services);
 
       if (servicesData == null || servicesData is! Map<String, dynamic>) {
         WG.error(message: "No se encontraron servicios.");
@@ -94,18 +85,38 @@ class ServicioController extends GetxController {
       servicioActual = servicio;
 
       tipoServicio.value = servicio.tipo;
-      correo.value = servicio.correo;
       titulo.value = servicio.titulo;
+      correo.value = servicio.correo;
       _claveTotp = servicio.claveTotp;
+
+      if (esGitHub()) {
+        // # Iniciamos con 30 segundos para GITHUB siempre
+        indiceTiempo.value = defaultIndiceTiempo30Sec;
+      } else {
+        indiceTiempo.value = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo) ?? defaultIndiceTiempo30Sec;
+      }
+
+      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo.value]);
     } catch (_) {
       WG.error();
       rethrow;
     }
   }
 
+  bool esGitHub() {
+    return tipoServicio.value == EnumTipoServicio.github;
+  }
+
+  bool noEsGitHub() {
+    return tipoServicio.value != EnumTipoServicio.github;
+  }
+
+  bool esGitHubNo30Sec(int sec) {
+    return esGitHub() && sec != tm30Sec;
+  }
+
   void setMilisegundosTemporizador({required int sec}) {
-    debugPrint('Tiempo: $sec');
-    if (tipoServicio.value == EnumTipoServicio.github && sec != tiempo30Sec) {
+    if (esGitHubNo30Sec(sec)) {
       advertenciaGitHub();
     }
     segundosLimite.value = sec;
@@ -113,7 +124,10 @@ class ServicioController extends GetxController {
   }
 
   void setMilisegundosTemporizadorStore({required int sec, required int idx}) async {
-    await AlphaStorage.save(key: EnumAlphaStorage.idxTiempo.name, value: idx);
+    if (noEsGitHub()) {
+      await AlphaStorage.save(key: EnumAlphaStorage.idxTiempo, value: idx);
+    }
+
     setMilisegundosTemporizador(sec: sec);
   }
 
@@ -123,17 +137,6 @@ class ServicioController extends GetxController {
       cancelarTemporizador();
       return;
     }
-
-    /*
-    if(tipoServicio.value == EnumTipoServicio.github) {
-      timerAdvertencia = Timer.periodic(Duration(seconds: 5), (timer) {
-        if(tipoServicio.value == EnumTipoServicio.github && segundosLimite != 30 &&
-            _keyAdvertenciaGithub.currentState?.mounted != true) {
-            advertenciaGitHub();
-        }
-      });
-    }
-     */
 
     int expiracionInicial = -1;
 
@@ -174,7 +177,6 @@ class ServicioController extends GetxController {
 
   void cancelarTemporizador() {
     timer?.cancel();
-    // timerAdvertencia?.cancel();
     update([RenderId.servicioProgresoTemporizador]);
   }
 
@@ -206,13 +208,4 @@ class ServicioController extends GetxController {
     );
     // WG.advertencia(message: );
   }
-
-  /*
-  String mostrarHora(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    final s = dt.second.toString().padLeft(2, '0');
-    return '$h:$m:$s';
-  }
-   */
 }

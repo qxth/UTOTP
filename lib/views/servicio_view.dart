@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/servicio_controller.dart';
-import '../models/servicio_modal.dart';
 import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
@@ -40,15 +39,15 @@ class ServicioView extends GetView<ServicioController> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 15,
             children: [
-              Obx(() => Tarjeta(text: controller.correo.value)),
-              Obx(() => Tarjeta(text: controller.tipoServicio.value.name)),
-              if (controller.tipoServicio.value == EnumTipoServicio.github && controller.segundosLimite.value != controller.tiempo30Sec)
+              Tarjeta(text: controller.correo.value),
+              Tarjeta(text: controller.tipoServicio.value.name, fontSize: 20),
+              if (controller.esGitHubNo30Sec(controller.segundosLimite.value))
                 IntrinsicWidth(
                   child: Card(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -66,21 +65,21 @@ class ServicioView extends GetView<ServicioController> {
                     ),
                   ),
                 ),
-
               Temporizador(),
-              Obx(() => Tarjeta(text: controller.codigo2fa.value)),
-              LineaTiempo(
-                callback: controller.setMilisegundosTemporizadorStore,
-                idxTiempoInicial: controller.indiceTiempoInicial,
-                lista: controller.lineaTiempo,
-              ),
+              Tarjeta(text: controller.codigo2fa.value),
+              if (controller.noEsGitHub())
+                LineaTiempo(
+                  idxTiempo: controller.indiceTiempo,
+                  callback: controller.setMilisegundosTemporizadorStore,
+                  lista: controller.lineaTiempo,
+                ),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   alignment: Alignment.center,
-                  child: Obx(() => Text(controller.temporizadorIniciado.value ? 'CANCELAR' : 'ACTIVAR')),
+                  child: Text(controller.temporizadorIniciado.value ? 'CANCELAR' : 'ACTIVAR'),
                 ),
               ),
             ],

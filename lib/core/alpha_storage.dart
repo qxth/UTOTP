@@ -2,48 +2,45 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'enums/storage_enum.dart';
+
 class AlphaStorage {
   static const _iosOptions = IOSOptions(accessibility: KeychainAccessibility.first_unlock);
   static const _androidOptions = AndroidOptions(encryptedSharedPreferences: true);
   static const _storage = FlutterSecureStorage(aOptions: _androidOptions, iOptions: _iosOptions);
 
-  static Future<bool> saveJson({key, value}) async {
+  static Future<bool> saveJson({required EnumAlphaStorage key, required value}) async {
     try {
       if (value != null) {
         String data = json.encode(value);
 
-        await _storage.write(key: key, value: data);
+        await _storage.write(key: key.name, value: data);
         return true;
       }
     } catch (_) {}
     return false;
   }
 
-  static Future<bool> save({key, value}) async {
+  static Future<bool> save({required EnumAlphaStorage key, required value}) async {
     try {
       if (value != null) {
-        await _storage.write(key: key, value: value.toString());
+        await _storage.write(key: key.name, value: value?.toString());
         return true;
       }
     } catch (_) {}
     return false;
   }
 
-  static Future<String?> read(key) async {
-    return await _storage.read(key: key);
+  static Future<String?> read(EnumAlphaStorage key) async {
+    return await _storage.read(key: key.name);
   }
 
-  static Future<int?> readInt(key) async {
+  static Future<int?> readInt(EnumAlphaStorage key) async {
     final String? value = await read(key);
-    try {
-      if (value != null) {
-        return int.parse(value);
-      }
-    } catch (_) {}
-    return null;
+    return int.tryParse(value ?? '');
   }
 
-  static Future<dynamic> readJson(key) async {
+  static Future<dynamic> readJson(EnumAlphaStorage key) async {
     try {
       String? data = await AlphaStorage.read(key);
       if (data != null) {
@@ -53,7 +50,7 @@ class AlphaStorage {
     return null;
   }
 
-  static Future<void> delete(key) async {
-    await _storage.delete(key: key);
+  static Future<void> delete(EnumAlphaStorage key) async {
+    await _storage.delete(key: key.name);
   }
 }

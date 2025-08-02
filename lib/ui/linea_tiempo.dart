@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LineaTiempo extends StatefulWidget {
-  final int idxTiempoInicial;
-  final Function({required int sec, required int idx}) callback;
+  final RxInt idxTiempo;
+  final void Function({required int sec, required int idx}) callback;
   final List<int> lista;
 
-  const LineaTiempo({super.key, required this.callback, required this.lista, required this.idxTiempoInicial});
+  const LineaTiempo({super.key, required this.callback, required this.lista, required this.idxTiempo});
 
   @override
   State<LineaTiempo> createState() => _LineaTiempoState();
@@ -19,12 +19,16 @@ class _LineaTiempoState extends State<LineaTiempo> {
   void initState() {
     super.initState();
 
-    controller = Get.put(LineaTiempoController(listaTiempos: widget.lista, idxTiempo: widget.idxTiempoInicial));
+    controller = Get.put(LineaTiempoController(listaTiempos: widget.lista, idxTiempo: widget.idxTiempo.value));
+
+    ever(widget.idxTiempo, (value) {
+      controller.setTiempo(idx: value);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('> Render $this');
+    debugPrint('> Render LT $this');
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -58,15 +62,8 @@ class LineaTiempoController extends GetxController {
   final List<int> listaTiempos;
   RxInt indiceTiempo = RxInt(0);
 
-  LineaTiempoController({required this.listaTiempos, required idxTiempo}) {
-    indiceTiempo.value = idxTiempo;
-  }
-
-  @override
-  void onInit() async {
-    super.onInit();
-
-    setTiempo(idxTiempo: indiceTiempo.value);
+  LineaTiempoController({required this.listaTiempos, required int idxTiempo}) {
+    setTiempo(idx: idxTiempo);
   }
 
   String label() {
@@ -89,9 +86,7 @@ class LineaTiempoController extends GetxController {
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
-  void setTiempo({required int? idxTiempo}) {
-    if (idxTiempo != null) {
-      indiceTiempo.value = idxTiempo;
-    }
+  void setTiempo({required int idx}) {
+    indiceTiempo.value = idx;
   }
 }

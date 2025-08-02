@@ -371,7 +371,7 @@ class _ModalServicioState extends State<ModalServicio> {
     );
 
     Map<String, dynamic> serviciosMap = {};
-    final data = await AlphaStorage.readJson(EnumAlphaStorage.services.name);
+    final data = await AlphaStorage.readJson(EnumAlphaStorage.services);
 
     if (data != null && data is Map<String, dynamic>) {
       serviciosMap = Map<String, dynamic>.from(data);
@@ -380,7 +380,8 @@ class _ModalServicioState extends State<ModalServicio> {
     // Añadir o actualizar el servicio
     serviciosMap[idServicio] = nuevoServicio.toJson();
 
-    bool status = await AlphaStorage.saveJson(key: EnumAlphaStorage.services.name, value: serviciosMap);
+    bool status = await AlphaStorage.saveJson(key: EnumAlphaStorage.services, value: serviciosMap);
+
     if (status) {
       // # Verificamos que la ruta este en la pantalla de inicio para actualizar los servicios
       if (Get.currentRoute == Rutas.inicio && Get.isRegistered<InicioController>()) {

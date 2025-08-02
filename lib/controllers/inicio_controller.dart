@@ -16,7 +16,7 @@ class InicioController extends GetxController {
   }
 
   Future<void> actualizarServicios() async {
-    final data = await AlphaStorage.readJson(EnumAlphaStorage.services.name);
+    final data = await AlphaStorage.readJson(EnumAlphaStorage.services);
 
     if (data != null && data is Map<String, dynamic>) {
       servicios.value = data.values.map((e) => ServicioModal.fromJson(e)).toList();
@@ -25,12 +25,12 @@ class InicioController extends GetxController {
 
   void eliminarServicio(String idServicio) async {
     try {
-      final Map<String, dynamic> data = await AlphaStorage.readJson(EnumAlphaStorage.services.name) ?? {};
+      final Map<String, dynamic> data = await AlphaStorage.readJson(EnumAlphaStorage.services) ?? {};
 
       // Eliminar el servicio del mapa
       data.remove(idServicio);
 
-      await AlphaStorage.saveJson(key: EnumAlphaStorage.services.name, value: data);
+      await AlphaStorage.saveJson(key: EnumAlphaStorage.services, value: data);
 
       servicios.value = data.values.map((e) => ServicioModal.fromJson(e)).toList();
 
