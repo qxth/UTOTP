@@ -108,7 +108,14 @@ class DialogAlertState extends State<DialogAlert> {
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), spreadRadius: 1, blurRadius: 3, offset: Offset(0, 3))],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2), // color de la sombra
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: Offset(0, 3), // posición de la sombra
+                  ),
+                ],
               ),
               child: CircleAvatar(backgroundColor: Colors.white, radius: 30, child: Icon(icon, color: backgroundColor, size: 35)),
             ),

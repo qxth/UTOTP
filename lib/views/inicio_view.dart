@@ -20,12 +20,6 @@ class InicioView extends GetView<InicioController> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () async {
-              await controller.actualizarServicios();
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.add_box),
             onPressed: () {
               WG.mostrarModalServicio(servicioExistente: null);
