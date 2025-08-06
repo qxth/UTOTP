@@ -12,21 +12,21 @@ import '../models/servicio_modal.dart';
 import '../ui/dialogs/dialog_alert.dart';
 import '../ui/widgets/wg.dart';
 
+final List<int> lineaTiempoSlider = [5, 10, 15, 20, 30, 60, 90, 120, 150, 180, 240, 300];
+
 class ServicioController extends GetxController {
   final RxInt indiceTiempo = RxInt(0);
   late final String _idService;
   late String _claveTotp;
 
-  final List<int> lineaTiempo = [5, 10, 15, 20, 30, 60, 75, 80, 90, 120, 150, 180, 240, 300];
-  final GlobalKey _keyAdvertenciaGithub = GlobalKey();
-  final defaultIndiceTiempo30Sec = 4;
+  final GlobalKey _keyAdvertenciaNoCumpleTipoServicio = GlobalKey();
+  late final int defaultIndiceTiempo30Sec;
   final int tm30Sec = 30;
 
   final RxBool cargando = true.obs;
   final RxString titulo = "".obs;
   final RxString correo = "user@example.com".obs;
   final RxString codigo2fa = "xxxxxx".obs;
-  final Rx<EnumTipoServicio> tipoServicio = Rx(EnumTipoServicio.github);
 
   final RxInt segundosLimite = 0.obs;
   final RxBool temporizadorIniciado = false.obs;
@@ -42,6 +42,7 @@ class ServicioController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
 
+    defaultIndiceTiempo30Sec = lineaTiempoSlider.indexWhere((element) => element == tm30Sec);
     _idService = Get.arguments["id"];
     await actualizarServicio();
 
@@ -84,50 +85,67 @@ class ServicioController extends GetxController {
 
       servicioActual = servicio;
 
-      tipoServicio.value = servicio.tipo;
+      // defaultServicio.value = servicio.defaultServicio;
       titulo.value = servicio.titulo;
       correo.value = servicio.correo;
-      _claveTotp = servicio.claveTotp;
+      _claveTotp = servicio.clave;
 
-      if (esGitHub()) {
-        // # Iniciamos con 30 segundos para GITHUB siempre
-        indiceTiempo.value = defaultIndiceTiempo30Sec;
-      } else {
-        indiceTiempo.value = await AlphaStorage.readInt(EnumAlphaStorage.idxTiempo) ?? defaultIndiceTiempo30Sec;
+      debugPrint('Raw: ${servicesData[_idService]}');
+      debugPrint('Servicio Actual Local: ${servicioActual?.periodo}');
+      debugPrint('Servicio Actual Defec: ${servicioActual?.defectoServicio.period}');
+      debugPrint('Tiene Periodo: ${tienePeriodoDefecto()} ${tienePeriodoLocal()}');
+
+      //if (tienePeriodoDefecto() || tienePeriodoLocal()) {
+      // # Tiene periodo entonces buscamos si existe en la linea de tiempo
+      final idxTiempo = lineaTiempoSlider.indexWhere((element) => element == servicio.periodo);
+      indiceTiempo.value = idxTiempo != -1 ? idxTiempo : defaultIndiceTiempo30Sec;
+      // debugPrint('IdxTiempo: ${indiceTiempo.value} ${labelTiempo(lineaTiempoSlider[indiceTiempo.value])}');
+
+      if (idxTiempo == -1) {
+        WG.error(message: 'No se ha encontrado el indice para el periodo de tiempo');
       }
 
-      setMilisegundosTemporizador(sec: lineaTiempo[indiceTiempo.value]);
+      setMilisegundosTemporizador(sec: lineaTiempoSlider[indiceTiempo.value]);
     } catch (_) {
       WG.error();
       rethrow;
     }
   }
 
-  bool esGitHub() {
-    return tipoServicio.value == EnumTipoServicio.github;
+  bool tienePeriodoDefecto() {
+    return servicioActual?.defectoServicio.period != null;
   }
 
-  bool noEsGitHub() {
-    return tipoServicio.value != EnumTipoServicio.github;
+  bool tienePeriodoLocal() {
+    return servicioActual?.periodo != null;
   }
 
-  bool esGitHubNo30Sec(int sec) {
-    return esGitHub() && sec != tm30Sec;
+  /*
+  bool tieneCualquierPeriodo() {
+    return tienePeriodoDefecto() || tienePeriodoLocal();
+  }
+   */
+
+  bool noTienePeriodoDefecto() {
+    return servicioActual?.defectoServicio.period == null;
+  }
+
+  bool tienePeriodoDefectoNoEsIgualAlPeriodoActual(int sec) {
+    return tienePeriodoDefecto() && sec != servicioActual?.defectoServicio.period;
   }
 
   void setMilisegundosTemporizador({required int sec}) {
-    if (esGitHubNo30Sec(sec)) {
-      advertenciaGitHub();
+    if (tienePeriodoDefectoNoEsIgualAlPeriodoActual(sec)) {
+      advertenciaPeriodoDefectoNoEsIgual();
     }
     segundosLimite.value = sec;
     milisegundosLimite = Duration.millisecondsPerSecond * sec;
   }
 
   void setMilisegundosTemporizadorStore({required int sec, required int idx}) async {
-    if (noEsGitHub()) {
-      await AlphaStorage.save(key: EnumAlphaStorage.idxTiempo, value: idx);
-    }
-
+    // if (noTienePeriodoDefecto()) {
+    // await AlphaStorage.save(key: EnumAlphaStorage.idxTiempo, value: idx);
+    // }
     setMilisegundosTemporizador(sec: sec);
   }
 
@@ -192,17 +210,18 @@ class ServicioController extends GetxController {
     txtTiempo = '$m:$s';
   }
 
-  void advertenciaGitHub() {
-    if (_keyAdvertenciaGithub.currentContext?.mounted == true) {
+  void advertenciaPeriodoDefectoNoEsIgual() {
+    if (_keyAdvertenciaNoCumpleTipoServicio.currentContext?.mounted == true) {
       return;
     }
     showDialog(
       context: GlobalNavigator.key.currentContext!,
       builder:
           (BuildContext context) => DialogAlert(
-            key: _keyAdvertenciaGithub,
+            key: _keyAdvertenciaNoCumpleTipoServicio,
             title: 'Advertencia',
-            message: 'Para GitHub debe establecer el tiempo en 30 segundos, para evitar conflictos con la cuenta.',
+            message:
+                'Debe establecer el tiempo (${servicioActual?.defectoServicio.period} segundos) recomendado para evitar conflictos con la cuenta.',
             type: DialogType.warning,
           ),
     );

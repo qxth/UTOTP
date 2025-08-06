@@ -2,6 +2,11 @@ import 'dart:typed_data';
 import 'enums/totp_enum.dart';
 import 'package:crypto/crypto.dart';
 
+const int defaultDigits = 6;
+const int defaultPeriod = 30;
+const defaultAlgorithm = TOTPAlgorithm.sha_1;
+const defaultEncoding = TOTPEncoding.hex;
+
 /**
  *
  * # Referencias
@@ -27,10 +32,10 @@ class Totp {
   /// - [expires]: Tiempo hasta la expiracion del codigo.
   static Future<TotpResult> generate(
     String key, {
-    int digits = 6,
-    TOTPAlgorithm algorithm = TOTPAlgorithm.sha_1,
-    TOTPEncoding encoding = TOTPEncoding.hex,
-    int period = 30,
+    int digits = defaultDigits,
+    TOTPAlgorithm algorithm = defaultAlgorithm,
+    TOTPEncoding encoding = defaultEncoding,
+    int period = defaultPeriod,
     DateTime? timestamp,
   }) async {
     timestamp ??= DateTime.now();

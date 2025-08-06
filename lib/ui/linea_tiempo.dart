@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'utils/tiempos.dart';
+
 class LineaTiempo extends StatefulWidget {
   final RxInt idxTiempo;
   final void Function({required int sec, required int idx}) callback;
@@ -22,8 +24,15 @@ class _LineaTiempoState extends State<LineaTiempo> {
     controller = Get.put(LineaTiempoController(listaTiempos: widget.lista, idxTiempo: widget.idxTiempo.value));
 
     ever(widget.idxTiempo, (value) {
+      debugPrint('Cambio Indice: $value');
       controller.setTiempo(idx: value);
     });
+  }
+
+  @override
+  void dispose() {
+    Get.delete<LineaTiempoController>();
+    super.dispose();
   }
 
   @override
@@ -67,24 +76,16 @@ class LineaTiempoController extends GetxController {
   }
 
   String label() {
-    final segundosActual = listaTiempos[indiceTiempo.value];
-
-    if (segundosActual < 60) {
-      return '${segundosActual.toInt()}s';
-    }
-    final int m = segundosActual ~/ 60;
-    final int s = segundosActual % 60;
-    if (s == 0) {
-      return '${m}m';
-    }
-    return '${m}m ${s}s';
+    return labelTiempo(listaTiempos[indiceTiempo.value]);
   }
 
+  /*
   String labelTiempo() {
     final int m = listaTiempos[indiceTiempo.value] ~/ 60;
     final int s = listaTiempos[indiceTiempo.value] % 60;
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
+   */
 
   void setTiempo({required int idx}) {
     indiceTiempo.value = idx;

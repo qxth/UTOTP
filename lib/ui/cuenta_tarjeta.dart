@@ -83,7 +83,7 @@ class _CuentaTarjetaState extends State<CuentaTarjeta> {
                         CircleAvatar(
                           radius: 30,
                           backgroundColor: Colors.transparent,
-                          child: SvgPicture.asset(WG.getIconoTipo(widget.servicio.tipo), height: 60, width: 60),
+                          child: SvgPicture.asset(widget.servicio.defectoServicio.icono, height: 60, width: 60),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -177,7 +177,7 @@ class _CuentaTarjetaState extends State<CuentaTarjeta> {
                 const SizedBox(height: 16),
                 CircleAvatar(
                   backgroundColor: Colors.transparent,
-                  child: SvgPicture.asset(WG.getIconoTipo(widget.servicio.tipo), width: 70, height: 70),
+                  child: SvgPicture.asset(widget.servicio.defectoServicio.icono, width: 70, height: 70),
                 ),
                 Text(widget.servicio.titulo, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Paleta.violeta)),
                 const SizedBox(height: 8),

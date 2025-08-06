@@ -1,1 +1,1 @@
-enum EnumAlphaStorage { idxTiempo, services }
+enum EnumAlphaStorage { services }

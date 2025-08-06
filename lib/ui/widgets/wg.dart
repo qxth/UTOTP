@@ -34,13 +34,4 @@ class WG {
       barrierDismissible: false,
     );
   }
-
-  static String getIconoTipo(EnumTipoServicio tipo) {
-    switch (tipo) {
-      case EnumTipoServicio.github:
-        return 'assets/svg/github.svg';
-      default:
-        return 'assets/svg/default_account.svg';
-    }
-  }
 }

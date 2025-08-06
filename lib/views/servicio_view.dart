@@ -46,8 +46,8 @@ class ServicioView extends GetView<ServicioController> {
             spacing: 15,
             children: [
               Tarjeta(text: controller.correo.value),
-              Tarjeta(text: controller.tipoServicio.value.name, fontSize: 20),
-              if (controller.esGitHubNo30Sec(controller.segundosLimite.value))
+              Tarjeta(servicio: controller.servicioActual?.defectoServicio, fontSize: 19),
+              if (controller.tienePeriodoDefectoNoEsIgualAlPeriodoActual(controller.segundosLimite.value))
                 IntrinsicWidth(
                   child: Card(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -57,7 +57,7 @@ class ServicioView extends GetView<ServicioController> {
                       padding: const EdgeInsets.all(10.0),
                       child: Center(
                         child: Text(
-                          'Advertencia! Establecer el tiempo en 30 segundos',
+                          'Advertencia! Establecer el tiempo en ${controller.servicioActual?.defectoServicio.period} segundos',
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Paleta.rojo),
                           textAlign: TextAlign.center,
                         ),
@@ -67,11 +67,11 @@ class ServicioView extends GetView<ServicioController> {
                 ),
               Temporizador(),
               Tarjeta(text: controller.codigo2fa.value),
-              if (controller.noEsGitHub())
+              if (controller.noTienePeriodoDefecto())
                 LineaTiempo(
                   idxTiempo: controller.indiceTiempo,
                   callback: controller.setMilisegundosTemporizadorStore,
-                  lista: controller.lineaTiempo,
+                  lista: lineaTiempoSlider,
                 ),
               ElevatedButton(
                 onPressed: controller.iniciarTemporizador,
