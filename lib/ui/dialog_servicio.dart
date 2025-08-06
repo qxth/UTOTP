@@ -55,7 +55,7 @@ class _ModalServicioState extends State<ModalServicio> {
   final RxBool isNew = RxBool(true);
   final RxBool isEdit = RxBool(false);
 
-  String? _idServicio;
+  late final String? _idServicio;
 
   @override
   void initState() {
@@ -71,30 +71,28 @@ class _ModalServicioState extends State<ModalServicio> {
     if (isEdit.value) {
       servicioExistente.value = widget.servicioExistente;
 
+      _idServicio = servicioExistente.value!.idServicio;
+      _selectTipoServicio.value = servicioExistente.value!.defectoServicio;
+
       _correoController.text = servicioExistente.value!.correo;
       _tituloController.text = servicioExistente.value!.titulo;
       _claveController.text = servicioExistente.value!.clave;
-
       _digitosController.text = servicioExistente.value!.digitos.toString();
+
       _selectTipoPeriodo.value = servicioExistente.value!.periodo;
       _selectTipoAlgoritmo.value = servicioExistente.value!.algoritmo;
       _selectTipoCodificacion.value = servicioExistente.value!.codificacion;
     } else {
+      _idServicio = _generarIdServicio();
+      _selectTipoServicio.value = EnumTipoServicio.github;
+
       _digitosController.text = (EnumTipoServicio.github.digits ?? defaultDigits).toString();
       _selectTipoPeriodo.value = EnumTipoServicio.github.period ?? defaultPeriod;
       _selectTipoAlgoritmo.value = EnumTipoServicio.github.algorithm ?? defaultAlgorithm;
       _selectTipoCodificacion.value = EnumTipoServicio.github.encoding ?? defaultEncoding;
     }
 
-    _selectTipoServicio.value = servicioExistente.value?.defectoServicio ?? EnumTipoServicio.github;
-
     _updateIsEditable(_selectTipoServicio.value);
-
-    if (servicioExistente.value?.idServicio != null && servicioExistente.value!.idServicio.isNotEmpty) {
-      _idServicio = servicioExistente.value!.idServicio;
-    } else {
-      _idServicio = _generarIdServicio();
-    }
 
     _comprobarHayCambios();
   }
@@ -834,7 +832,7 @@ class _ModalServicioState extends State<ModalServicio> {
                         focusNode: _digitosFocus,
                         enabled: modificableDigitos.value,
                         decoration: InputDecoration(
-                          labelText: 'Dígitos',
+                          labelText: 'Dígitos${_editable(modificableDigitos)}',
                           hintText: 'Dígitos',
                           filled: true,
                           fillColor: esModoOscuro ? Paleta.negro_medio_30 : Paleta.lavanda_claro,
