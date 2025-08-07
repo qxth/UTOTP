@@ -4,6 +4,7 @@ import '../controllers/servicio_controller.dart';
 import '../ui/linea_tiempo.dart';
 import '../ui/tarjeta.dart';
 import '../ui/temporizador.dart';
+import '../ui/utils/logger.dart';
 import '../ui/utils/paleta.dart';
 import '../ui/widgets/wg.dart';
 
@@ -12,7 +13,7 @@ class ServicioView extends GetView<ServicioController> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('> Render Servicio: $this');
+    logger('> Render Servicio: $this');
     return Obx(() {
       if (controller.cargando.value) {
         return CircularProgressIndicator();

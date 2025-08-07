@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'utils/logger.dart';
 import 'utils/tiempos.dart';
 
 class LineaTiempo extends StatefulWidget {
@@ -24,7 +25,7 @@ class _LineaTiempoState extends State<LineaTiempo> {
     controller = Get.put(LineaTiempoController(listaTiempos: widget.lista, idxTiempo: widget.idxTiempo.value));
 
     ever(widget.idxTiempo, (value) {
-      debugPrint('Cambio Indice: $value');
+      logger('Cambio Indice: $value');
       controller.setTiempo(idx: value);
     });
   }
@@ -37,7 +38,7 @@ class _LineaTiempoState extends State<LineaTiempo> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('> Render LT $this');
+    logger('> Render LT $this');
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

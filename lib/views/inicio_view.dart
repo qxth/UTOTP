@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/inicio_controller.dart';
 import '../ui/cuenta_tarjeta.dart';
+import '../ui/utils/logger.dart';
 import '../ui/utils/paleta.dart';
 import '../ui/widgets/wg.dart';
 
@@ -10,7 +11,7 @@ class InicioView extends GetView<InicioController> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('> Render Inicio');
+    logger('> Render Inicio');
 
     return Scaffold(
       appBar: AppBar(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../core/rutas.dart';
+import '../ui/utils/logger.dart';
 import '../ui/utils/paleta.dart';
 
 class LoadingView extends StatefulWidget {
@@ -29,7 +30,7 @@ class _LoadingViewState extends State<LoadingView> with TickerProviderStateMixin
     _controller = AnimationController(vsync: this);
 
     timer = Timer.periodic(Duration(milliseconds: 900), (timer) {
-      debugPrint('$countTimer');
+      logger('$countTimer');
       txtCargando.value = 'Cargando'.padRight(8 + countTimer, '.');
       countTimer = countTimer >= 2 ? 0 : countTimer + 1;
     });

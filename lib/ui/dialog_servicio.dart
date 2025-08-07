@@ -9,6 +9,7 @@ import '../core/enums/totp_enum.dart';
 import '../core/rutas.dart';
 import '../core/totp.dart';
 import '../models/servicio_modal.dart';
+import 'utils/logger.dart';
 import 'utils/paleta.dart';
 import 'utils/tiempos.dart';
 import 'widgets/wg.dart';
@@ -31,10 +32,10 @@ class _ModalServicioState extends State<ModalServicio> {
   final TextEditingController _claveController = TextEditingController();
   final TextEditingController _digitosController = TextEditingController();
 
-  late FocusNode _correoFocus;
-  late FocusNode _tituloFocus;
-  late FocusNode _claveFocus;
-  late FocusNode _digitosFocus;
+  final FocusNode _correoFocus = FocusNode();
+  final FocusNode _tituloFocus = FocusNode();
+  final FocusNode _claveFocus = FocusNode();
+  final FocusNode _digitosFocus = FocusNode();
 
   final RegExp _correoRegExp = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
   final Rx<EnumTipoServicio> _selectTipoServicio = EnumTipoServicio.github.obs;
@@ -60,32 +61,31 @@ class _ModalServicioState extends State<ModalServicio> {
   @override
   void initState() {
     super.initState();
-    _correoFocus = FocusNode();
-    _tituloFocus = FocusNode();
-    _claveFocus = FocusNode();
-    _digitosFocus = FocusNode();
 
-    isNew.value = widget.servicioExistente == null;
+    final servicio = widget.servicioExistente;
+
+    isNew.value = servicio == null;
     isEdit.value = !isNew.value;
 
-    if (isEdit.value) {
-      servicioExistente.value = widget.servicioExistente;
+    // # Esta en modo editable
+    if (servicio != null) {
+      servicioExistente.value = servicio;
 
-      _idServicio = servicioExistente.value!.idServicio;
-      _selectTipoServicio.value = servicioExistente.value!.defectoServicio;
+      _idServicio = servicio.idServicio;
+      _selectTipoServicio.value = servicio.defectoServicio;
 
-      _correoController.text = servicioExistente.value!.correo;
-      _tituloController.text = servicioExistente.value!.titulo;
-      _claveController.text = servicioExistente.value!.clave;
-      _digitosController.text = servicioExistente.value!.digitos.toString();
+      _correoController.text = servicio.correo;
+      _tituloController.text = servicio.titulo;
+      _claveController.text = servicio.clave;
+      _digitosController.text = servicio.digitos.toString();
 
-      _selectTipoPeriodo.value = servicioExistente.value!.periodo;
-      _selectTipoAlgoritmo.value = servicioExistente.value!.algoritmo;
-      _selectTipoCodificacion.value = servicioExistente.value!.codificacion;
+      _selectTipoPeriodo.value = servicio.periodo;
+      _selectTipoAlgoritmo.value = servicio.algoritmo;
+      _selectTipoCodificacion.value = servicio.codificacion;
     } else {
       _idServicio = _generarIdServicio();
-      _selectTipoServicio.value = EnumTipoServicio.github;
 
+      _selectTipoServicio.value = EnumTipoServicio.github;
       _digitosController.text = (EnumTipoServicio.github.digits ?? defaultDigits).toString();
       _selectTipoPeriodo.value = EnumTipoServicio.github.period ?? defaultPeriod;
       _selectTipoAlgoritmo.value = EnumTipoServicio.github.algorithm ?? defaultAlgorithm;
@@ -102,9 +102,13 @@ class _ModalServicioState extends State<ModalServicio> {
     _correoController.dispose();
     _tituloController.dispose();
     _claveController.dispose();
+    _digitosController.dispose();
+
     _correoFocus.dispose();
     _tituloFocus.dispose();
     _claveFocus.dispose();
+    _digitosFocus.dispose();
+
     super.dispose();
   }
 
@@ -489,7 +493,7 @@ class _ModalServicioState extends State<ModalServicio> {
         codificacionNuevo: _selectTipoCodificacion.value.name,
       );
 
-      debugPrint('Confirmacion: $confirmacion');
+      logger('Confirmacion: $confirmacion');
 
       if (!confirmacion) return;
     }
@@ -506,7 +510,7 @@ class _ModalServicioState extends State<ModalServicio> {
       clave: claveTotp,
     );
 
-    debugPrint('${nuevoServicio.toJson()}');
+    logger('${nuevoServicio.toJson()}');
 
     // return;
 
@@ -943,7 +947,7 @@ class _ModalServicioState extends State<ModalServicio> {
   }
 
   void _cambioServicio(EnumTipoServicio? servicio) {
-    debugPrint('Digits: ${servicio?.digits ?? defaultDigits}');
+    logger('Digits: ${servicio?.digits ?? defaultDigits}');
 
     _selectTipoPeriodo.value = servicio?.period ?? defaultPeriod;
     _digitosController.text = (servicio?.digits ?? defaultDigits).toString();

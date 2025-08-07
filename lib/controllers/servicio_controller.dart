@@ -10,6 +10,7 @@ import '../core/navigator.dart';
 import '../core/totp.dart';
 import '../models/servicio_modal.dart';
 import '../ui/dialogs/dialog_alert.dart';
+import '../ui/utils/logger.dart';
 import '../ui/widgets/wg.dart';
 
 final List<int> lineaTiempoSlider = [5, 10, 15, 20, 30, 60, 90, 120, 150, 180, 240, 300];
@@ -90,16 +91,16 @@ class ServicioController extends GetxController {
       correo.value = servicio.correo;
       _claveTotp = servicio.clave;
 
-      debugPrint('Raw: ${servicesData[_idService]}');
-      debugPrint('Servicio Actual Local: ${servicioActual?.periodo}');
-      debugPrint('Servicio Actual Defec: ${servicioActual?.defectoServicio.period}');
-      debugPrint('Tiene Periodo: ${tienePeriodoDefecto()} ${tienePeriodoLocal()}');
+      logger('Raw: ${servicesData[_idService]}');
+      logger('Servicio Actual Local: ${servicioActual?.periodo}');
+      logger('Servicio Actual Defec: ${servicioActual?.defectoServicio.period}');
+      logger('Tiene Periodo: ${tienePeriodoDefecto()} ${tienePeriodoLocal()}');
 
       //if (tienePeriodoDefecto() || tienePeriodoLocal()) {
       // # Tiene periodo entonces buscamos si existe en la linea de tiempo
       final idxTiempo = lineaTiempoSlider.indexWhere((element) => element == servicio.periodo);
       indiceTiempo.value = idxTiempo != -1 ? idxTiempo : defaultIndiceTiempo30Sec;
-      // debugPrint('IdxTiempo: ${indiceTiempo.value} ${labelTiempo(lineaTiempoSlider[indiceTiempo.value])}');
+      // logger('IdxTiempo: ${indiceTiempo.value} ${labelTiempo(lineaTiempoSlider[indiceTiempo.value])}');
 
       if (idxTiempo == -1) {
         WG.error(message: 'No se ha encontrado el indice para el periodo de tiempo');
@@ -182,13 +183,13 @@ class ServicioController extends GetxController {
           }
           rethrow;
         }
-        // debugPrint('> Obteniendo OTP: $expiracion');
-        debugPrint('Code: ${codigo2fa.value} | Sec: $segundosLimite');
+        // logger('> Obteniendo OTP: $expiracion');
+        logger('Code: ${codigo2fa.value} | Sec: $segundosLimite');
       }
 
       mostrarTiempo(intervalo);
-      // debugPrint('$expiracion $intervalo');
-      // debugPrint('${mostrarHora(now)} | ${mostrarHora(expiracionTime)} | ${now.millisecondsSinceEpoch} | ${expiracionTime.millisecondsSinceEpoch}');
+      // logger('$expiracion $intervalo');
+      // logger('${mostrarHora(now)} | ${mostrarHora(expiracionTime)} | ${now.millisecondsSinceEpoch} | ${expiracionTime.millisecondsSinceEpoch}');
       update([RenderId.servicioProgresoTemporizador]);
     });
   }
