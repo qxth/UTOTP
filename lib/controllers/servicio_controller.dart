@@ -107,6 +107,12 @@ class ServicioController extends GetxController {
       }
 
       setMilisegundosTemporizador(sec: lineaTiempoSlider[indiceTiempo.value]);
+
+      logger('Timer: ${timer?.isActive}');
+      if (timer != null && timer?.isActive == true) {
+        cancelarTemporizador();
+        iniciarTemporizador();
+      }
     } catch (_) {
       WG.error();
       rethrow;
@@ -159,6 +165,8 @@ class ServicioController extends GetxController {
 
     int expiracionInicial = -1;
 
+    logger('Init Temporizador: $servicioActual}');
+
     timer = Timer.periodic(Duration(milliseconds: 60), (_) async {
       DateTime now = DateTime.now();
 
@@ -171,12 +179,17 @@ class ServicioController extends GetxController {
       if (expiracionInicial != expiracion) {
         expiracionInicial = expiracion;
         try {
-          final totp = await Totp.generate(_claveTotp, period: segundosLimite.value);
+          final totp = await Totp.generate(
+            _claveTotp,
+            period: segundosLimite.value,
+            algorithm: servicioActual!.algoritmo,
+            digits: servicioActual!.digitos,
+            encoding: servicioActual!.codificacion,
+          );
           codigo2fa.value = totp.otp;
         } catch (ex) {
           if (ex.toString() == TOTPError.invalidBase32) {
             WG.error(message: "La clave totp no es válida.");
-            temporizadorIniciado.value = false;
             cancelarTemporizador();
           } else {
             WG.error(message: "Error al generar el OTP.");
@@ -184,7 +197,7 @@ class ServicioController extends GetxController {
           rethrow;
         }
         // logger('> Obteniendo OTP: $expiracion');
-        logger('Code: ${codigo2fa.value} | Sec: $segundosLimite');
+        // logger('Code: ${codigo2fa.value} | Sec: $segundosLimite');
       }
 
       mostrarTiempo(intervalo);
@@ -196,6 +209,7 @@ class ServicioController extends GetxController {
 
   void cancelarTemporizador() {
     timer?.cancel();
+    temporizadorIniciado.value = false;
     update([RenderId.servicioProgresoTemporizador]);
   }
 

@@ -86,14 +86,11 @@ class ServicioModal {
 
   @override
   String toString() {
-    // return toJson().values.join('|');
-
     return {
       'defaultServicio': defectoServicio,
       'correo': correo,
       'titulo': titulo,
       'idServicio': idServicio,
-      'clave': clave,
       'digitos': digitos,
       'periodo': periodo,
       'algoritmo': algoritmo,
